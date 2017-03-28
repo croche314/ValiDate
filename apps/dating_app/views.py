@@ -65,7 +65,7 @@ def create_user(request):
 			print '-' * 50
 			messages.warning(request, 'hashing password or creating user')
 			# If unsuccessful, redirect back to index, display errors
-			return redirect('dating:index')
+			return redirect('dating:questions')
 
 def login_user(request):
 	# If login fields match a User, insert session info, and redirect to Home page
@@ -114,16 +114,42 @@ def home(request):
 	print '[username]:',request.session['username']
 	print '[user_id]:',request.session['user_id']
 	print '-' * 50
+
 	return render(request, 'dating_app/home.html')
 
 def logout(request):
 	request.session.clear()
 	return redirect('dating:index')
 
-def edit_user(request,user_id):
+def show_user(request,user_id):
 	this_user = User.objects.get(id=request.session['user_id'])
+	my_answers = Answer.objects.get(user_id=this_user.id)
+	
+	context = {
+		'user': this_user,
+		'answers': my_answers
+	}
 
-	return render(request, 'dating_app/edit_user.html')
+	return render(request, 'dating_app/show_user.html', context)
+
+def edit_user(request,user_id):
+	print 'user_id:',user_id
+	print 'session[user_id]:',request.session['user_id']
+	if str(user_id) != str(request.session['user_id']):
+		messages.warning(request, 'You do not have permission to edit another user')
+		return redirect('dating:home')
+	else:
+		this_user = User.objects.get(id=request.session['user_id'])
+		my_answers = Answer.objects.get(user_id=this_user.id)
+		
+		context = {
+			'user': this_user,
+			'answers': my_answers
+		}
+		return render(request, 'dating_app/edit_user.html', context)
+
+def update_user(request, user_id):
+	pass
 
 def display_questions(request):
 	return render(request, 'dating_app/questionaire.html')
