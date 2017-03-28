@@ -87,6 +87,15 @@ a {
 	text-align: center;
 }
 
+#user_answers {
+	width: 50%;
+	margin: 25px auto;
+}
+
+#user_answers td {
+	padding: 10px;
+}
+
 
 
 

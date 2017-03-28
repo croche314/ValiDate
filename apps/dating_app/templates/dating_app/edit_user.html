@@ -9,6 +9,13 @@
   } );
   </script>
 
+  <style type="text/css">
+  	#user_answers {
+  		font-size: 20px;
+  		color: #333;
+  	}
+  </style>
+
 <div id="container-fluid">
 	<div class="row">
 		<div class="col-sm-2 center-block">
@@ -18,9 +25,10 @@
 			<br>
 			Account status: <br>
 			<input type="checkbox" id="toggle_account">
+			<br><br>
 		</div> <!-- .col -->
 		<div class="col-sm-8">
-			<h1 class="page_heading">My Profile</h1>
+			<h1 class="page_heading">Edit Profile</h1>
 			<span class="center center-block">67% complete</span>
 			<div id="progressbar" class="center-block"></div>
 			<br>
@@ -32,6 +40,119 @@
 				cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
 				proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 			</p>
+			<div id="user_answers">
+				<form action="{% url 'dating:update_user' user_id=request.session.user_id%}" method="post">
+					<table class="table">
+						<tr>
+							<td><label class="label label-info">Name:</label></td>
+							<td><input type="text" name="html_name" value="{{user.name}}"></td>
+						</tr>
+						<tr>
+							<td><label class="label label-info">Age:</label></td>
+							<td><input type="text" name="html_age" value="{{user.age}}"></td>
+						</tr>
+						<tr>
+							<td><label class="label label-info">Gender:</label></td>
+							<td>
+								<select name="html_gender">
+		  							<option value="{{answers.gender}}"></option>
+								    <option value="male">Male</option>
+								    <option value="female">Female</option>
+								</select>
+							</td>
+						</tr>
+						<tr>
+							<td><label class="label label-info">Height:</label></td>
+							<td><input type="text" name="html_height" value="{{answers.height}}"> inches</td>
+						</tr>
+						<tr>
+							<td><label class="label label-info">Favorite language:</label></td>
+							<td>
+								<select name="html_language">
+							      <option value="{{answers.language}}"></option>
+							      <option value="python">Python</option>
+							      <option value="html">Html</option>
+							      <option value="javascript">Javascript</option>
+							      <option value="ruby">Ruby</option>
+							    </select>
+							</td>
+						</tr>
+						<tr>
+							<td><label class="label label-info">Preferred stack:</label></td>
+							<td>
+								<select name="html_stack">
+							      <option value="{{answers.stack}}"></option>
+							      <option value="full">Full Stack</option>
+							      <option value="front">Front-End</option>
+							      <option value="back">Back-End</option>
+							    </select>
+							</td>
+						</tr>
+						<tr>
+							<td><label class="label label-info">Religion:</label></td>
+							<td>
+								<select name="html_religion">
+							      <option value="{{answers.religion}}"></option>
+							      <option value="Mac">Mac</option>
+							      <option value="Windows">Windows</option>
+							      <option value="Linux">Linux</option>
+							    </select>
+							</td>
+						</tr>
+						<tr>
+							<td><label class="label label-info">Smokes</label></td>
+							<td>
+								<select name="html_smoke">
+							      <option value="{{answers.smoke}}"></option>
+							      <option value="True">True</option>
+							      <option value="False">False</option>
+							    </select>
+							</td>
+						</tr>
+						<tr>
+							<td><label class="label label-info">Body type:</label></td>
+							<td>
+								<select name="html_body_type">
+							      <option value="{{answers.body_type}}"></option>
+							      <option value="slender">Slender</option>
+							      <option value="Big and Beautiful">Big and Beautiful</option>
+							      <option value="curvy">Curvy</option>
+							      <option value="about average">About Average</option>
+							      <option value="full-figured">Full-figured</option>
+							      <option value="heavyset">Heavyset</option>
+							      <option value="a few extra pounds">A few extra pounds</option>
+							      <option value="stocky">Stocky</option>
+							    </select>
+							</td>
+						</tr>
+						<tr>
+							<td><label class="label label-info">Ethnicity:</label></td>
+							<td>
+								<select name='html_ethnicity'>
+							      <option value="{{answers.ethnicity}}"></option>
+							      <option value="white">White</option>
+							      <option value="african american">African American</option>
+							      <option value="asian">Asian</option>
+							      <option value="american indian">American Indian or Alaska Native</option>
+							      <option value="hispanic">Hispanic or Latino</option>
+							    </select>
+							</td>
+						</tr>
+						<tr>
+							<td><label class="label label-info">Wants children:</label></td>
+							<td>
+								<select name="html_wants_children">
+							      <option value="{{answers.wants_children}}"></option>
+							      <option value="True">True</option>
+							      <option value="False">False</option>
+							    </select>
+							</td>
+						</tr>
+
+					</table>
+					<input class="btn btn-danger center-block" type="submit" value="Update">
+				</form>
+			</div> <!-- #user_answers -->
 		</div> <!-- .col -->
 	</div> <!-- .row -->
 </div> <!-- #container-fluid -->
@@ -40,3 +161,5 @@
 		$("#toggle_account").toggleSwitch(onLabel="Active");
 	});
 </script>
+</body>
+</html>

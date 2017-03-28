@@ -36,7 +36,7 @@
 		</a>
 		<a href="{% url 'dating:home' %}">Home</a>
 		&nbsp;|&nbsp;
-		<a href="{% url 'dating:edit_user' user_id=request.session.user_id %}">View My Profile</a>
+		<a href="{% url 'dating:show_user' user_id=request.session.user_id %}">View My Profile</a>
 		&nbsp;|&nbsp;
 		<a href="{% url 'dating:display_questions' %}">Questionaire</a>
 		&nbsp;|&nbsp;

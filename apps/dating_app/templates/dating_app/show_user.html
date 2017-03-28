@@ -1,0 +1,91 @@
+{% include 'dating_app/header.html' %}
+	 {% load staticfiles %}
+
+  <script>
+  $( function() {
+    $( "#progressbar" ).progressbar({
+      value: 67
+    });
+  } );
+  </script>
+
+  <style type="text/css">
+  	#user_answers {
+  		font-size: 20px;
+  		color: #333;
+  	}
+  </style>
+
+<div id="container-fluid">
+	<div class="row">
+		<div class="col-sm-2 center-block">
+			<img class="img-responsive" src="{% static 'dating_app/17.jpg' %}" alt="{{ request.session.username }} profile pic">
+			<br>
+			<a class="btn btn-success center center-block" href="edit_image.html">Change Profile Image</a>
+			<br>
+			Account status: <br>
+			<input type="checkbox" id="toggle_account">
+			<br><br>
+			<a class="btn btn-danger center-block" href="{% url 'dating:edit_user' user_id=request.session.user_id %}">Edit Profile</a>
+		</div> <!-- .col -->
+		<div class="col-sm-8">
+			<h1 class="page_heading">My Profile</h1>
+			<span class="center center-block">67% complete</span>
+			<div id="progressbar" class="center-block"></div>
+			<br>
+			<p id="user_intro" class="center-block">
+				Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+				tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+				quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+				consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+				cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+				proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+			</p>
+
+			<div id="user_answers">
+				<table>
+					<tr>
+						<td><label class="label label-info">Name:</label></td><td>{{user.name}}</td>
+					</tr>
+					<tr>
+						<td><label class="label label-info">Age:</label></td><td>{{user.age}}</td>
+					</tr>
+					<tr>
+						<td><label class="label label-info">Gender:</label></td><td>{{answers.gender}}</td>
+					</tr>
+					<tr>
+						<td><label class="label label-info">Height:</label></td><td>{{answers.height}} inches</td>
+					</tr>
+					<tr>
+						<td><label class="label label-info">Favorite language:</label></td><td>{{answers.language}}</td>
+					</tr>
+					<tr>
+						<td><label class="label label-info">Preferred stack:</label></td><td>{{answers.stack}}</td>
+					</tr>
+					<tr>
+						<td><label class="label label-info">Religion:</label></td><td>{{answers.religion}}</td>
+					</tr>
+					<tr>
+						<td><label class="label label-info">Smokes</label></td><td>{{answers.smoke}}</td>
+					</tr>
+					<tr>
+						<td><label class="label label-info">Body type:</label></td><td>{{answers.body_type}}</td>
+					</tr>
+					<tr>
+						<td><label class="label label-info">Ethnicity:</label></td><td>{{answers.ethnicity}}</td>
+					</tr>
+					<tr>
+						<td><label class="label label-info">Wants children:</label></td><td>{{answers.wants_children}}</td>
+					</tr>
+
+				</table>
+				<a class="btn btn-danger center-block" href="{% url 'dating:edit_user' user_id=request.session.user_id %}">Edit Profile</a>
+			</div> <!-- #user_answers -->
+		</div> <!-- .col -->
+	</div> <!-- .row -->
+</div> <!-- #container-fluid -->
+<script>
+	$(document).ready(function () {
+		$("#toggle_account").toggleSwitch(onLabel="Active");
+	});
+</script>
