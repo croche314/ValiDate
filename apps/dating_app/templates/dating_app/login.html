@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>ValiDating | Login</title>
+	<!-- Bootstrap CSS -->
+	<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	<!-- jQuery UI base theme-->
+	<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css">
+	<!-- jQuery -->
+	 <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+	 <!-- jQuery -->
+	 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+	 <!-- Bootstrap JS -->
+	<script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	 <!-- Fonts -->
+	<link href="https://fonts.googleapis.com/css?family=Pacifico|Open+Sans:300" rel="stylesheet"> 
+	 {% load staticfiles %}
+	 <!-- Styles -->
+	 <link rel="stylesheet" type="text/css" href="{% static 'dating_app/login_reg_style.css' %}">
+	  <script>
+	   $( function() {
+    $( "#tabs" ).tabs();
+  } );
+  	</script>
+</head>
+<body>
+
+	<header>
+		<div id="branding">
+			<img class="img-responsive" src="{% static 'dating_app/logo.png' %}" alt="ValiDating Logo">
+			<h1>ValiDate.com</h1>
+			<h2>Online Dating for Coders</h2>
+		</div>
+	</header>
+
+<div id="container-fluid">
+
+	<h2 class="call_to_action">Find a hot front or back-end</h2>
+
+	<div id="tabs">
+	<!-- Django Messages -->
+	<div class="login_errors">
+		{% if messages %}
+			{% for message in messages %}
+				<p>Error: {{message}}</p>
+			{% endfor %}
+ 		{% endif %}
+ 	</div>
+
+ 	<!-- Tabbed Login and Registration -->
+		<ul>
+			<li><a href="#tabs-login">Login</a></li>
+			<li><a href="#tabs-register">Register</a></li>
+		</ul>
+		<div id="tabs-login">
+			<!-- Login form -->
+			<form id="login_form" action="{% url 'dating:login_user' %}" method="post">
+				{% csrf_token %}
+				<fieldset>
+					<legend>Log In</legend>
+					<table>
+						<tr>
+							<td>E-mail:</td><td><input class="form-control" type="text" name="html_email"></td>
+						</tr>
+						<tr>
+							<td>Password:</td><td><input class="form-control" type="password" name="html_password"></td>
+						</tr>
+					</table>
+					<br>
+					<input class="btn btn-block btn-primary" type="submit" value="Log In">
+				</fieldset>
+			</form>
+		</div> <!-- #tabs-login -->
+
+		<div id="tabs-register">
+			<!-- Register form -->
+			<form id="register_form" action="{% url 'dating:create_user' %}" method="post">
+				{% csrf_token %}
+				<fieldset>
+					<legend>Register</legend>
+					<table>
+						<tr>
+							<td>Name:</td><td><input class="form-control" type="text" name="html_name"></td>
+						</tr>
+						<tr>
+							<td>Username:</td><td><input class="form-control" type="text" name="html_username"></td>
+						</tr>
+						<tr>
+							<td>E-mail:</td><td><input class="form-control" type="text" name="html_email"></td>
+						</tr>
+						<tr>
+							<td>Age:</td><td><input class="form-control" type="text" name="html_age"></td>
+						</tr>
+						<tr>
+							<td>Password:</td><td><input class="form-control" type="password" name="html_password"></td>
+						</tr>
+						<tr>
+							<td>Confirm password:</td><td><input class="form-control" type="password" name="html_confirm_password"></td>
+						</tr>
+					</table>
+					<br>
+					<input class="btn btn-primary btn-block" type="submit" value="Register">
+				</fieldset>
+			</form>
+		</div> <!-- #tabs-register -->
+		
+</div> <!-- #container -->
+<br>
+
+</body>
+</html>

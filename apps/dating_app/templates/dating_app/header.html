@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>ValiDating</title>
+	{% load staticfiles %}
+	<!-- Bootstrap CSS -->
+	<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	<!-- jQuery UI base theme-->
+	<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css">
+	<!-- jQuery -->
+	 <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+	 <!-- jQuery -->
+	 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+	 <link rel="stylesheet" href="{% static 'dating_app/tinytools.toggleswitch.min.css' %}"></script>
+	 <script src="{% static 'dating_app/tinytools.toggleswitch.min.js' %}"></script>
+	 <!-- Bootstrap JS -->
+	<script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	 <!-- Fonts -->
+	<link href="https://fonts.googleapis.com/css?family=Pacifico|Open+Sans:300" rel="stylesheet">
+	<!-- Custom Styles -->
+	 <link rel="stylesheet" type="text/css" href="{% static 'dating_app/style.css' %}">
+</head>
+<body>
+{% if messages %}
+	{% for message in messages %}
+		<p>{{message}}</p>
+	{% endfor %}
+{% endif %}
+	<header>
+		<a href="{% url 'dating:home' %}">
+			<div id="branding">
+				<img class="img-responsive" src="{% static 'dating_app/logo.png' %}" alt="ValiDating Logo">
+				<h1>ValiDate.com</h1>
+				<h2>Online Dating for Coders</h2>
+			</div>
+		</a>
+		<a href="{% url 'dating:home' %}">Home</a>
+		&nbsp;|&nbsp;
+		<a href="{% url 'dating:edit_user' user_id=request.session.user_id %}">View My Profile</a>
+		&nbsp;|&nbsp;
+		<a href="{% url 'dating:display_questions' %}">Questionaire</a>
+		&nbsp;|&nbsp;
+		<a href="{% url 'dating:logout' %}">Log out</a>
+
+
+	</header>

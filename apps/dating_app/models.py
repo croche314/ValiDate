@@ -1,0 +1,52 @@
+from __future__ import unicode_literals
+
+from django.db import models
+
+# Create your models here.
+class User(models.Model):
+	name = models.CharField(max_length=50)
+	username = models.CharField(max_length=50, unique=True)
+	email = models.EmailField(unique=True)
+	password = models.CharField(max_length=200)
+	age = models.IntegerField()
+	account_active = models.BooleanField(default=True)
+	created_at = models.DateTimeField(auto_now_add=True)
+	updated_at = models.DateTimeField(auto_now=True)
+
+class Answer(models.Model):
+	age = models.IntegerField()
+	gender = models.CharField(max_length=10)
+	height = models.IntegerField()
+	language = models.CharField(max_length=10)
+	zip_code = models.IntegerField()
+	stack = models.CharField(max_length=15)
+	religion = models.CharField(max_length=10)
+	smoke = models.BooleanField(default=False)
+	body_type = models.CharField(max_length=20)
+	ethnicity = models.CharField(max_length=20)
+	wants_children = models.BooleanField()
+	user = models.ForeignKey(User, related_name='my_answers')
+	created_at = models.DateTimeField(auto_now_add=True)
+	updated_at = models.DateTimeField(auto_now=True)
+
+class Match(models.Model):
+	user1 = models.ForeignKey(User, related_name='my_match')
+	user2 = models.ForeignKey(User, related_name='matched_me')
+	created_at = models.DateTimeField(auto_now_add=True)
+	updated_at = models.DateTimeField(auto_now=True)
+
+class Like(models.Model):
+	user1 = models.ForeignKey(User, related_name='my_likes')
+	user2 = models.ForeignKey(User, related_name='liked_me')
+	created_at = models.DateTimeField(auto_now_add=True)
+	updated_at = models.DateTimeField(auto_now=True)
+
+class Message(models.Model):
+	text = models.TextField(max_length=1000)
+	sender = models.ForeignKey(User, related_name='my_sent')
+	receiver = models.ForeignKey(User,related_name='my_received')
+	created_at = models.DateTimeField(auto_now_add=True)
+	updated_at = models.DateTimeField(auto_now=True)
+
+
+

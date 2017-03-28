@@ -1,0 +1,92 @@
+
+body {
+	background-color: #2274a5;
+	font-family: 'Open Sans';
+	color: white;
+}
+
+header{
+	background-color: #305252;
+}
+
+#container-fluid {
+	padding: 25px;
+	color: black;
+}
+
+#branding {
+	display: inline-block;
+	color: white;
+	padding: 10px;
+	margin: 0 50px;
+}
+
+#branding img {
+	display: inline-block;
+	vertical-align: text-middle;
+}
+
+#branding h1 {
+	font-family: 'Pacifico';
+	font-size: 50px;
+	display: inline-block;
+	margin: 0 0 0 15px;
+}
+
+#branding h2 {
+	font-size: 16px;
+	margin: -15px 0 0 100px;
+	font-style: italic;
+}
+
+.call_to_action {
+	width: 80%;
+	color: white;
+	font-size: 80px;
+	font-weight: 300;
+	text-align: center;
+	padding-top: 100px;
+	margin: 0px auto;
+}
+
+.page_heading {
+	text-align: center;
+	padding: 25px 0;
+}
+
+.center {
+	text-align: center;
+}
+
+.center-block {
+	display: block;
+	margin: 0 auto;
+}
+
+a {
+	color: white;
+}
+
+#progressbar {
+	width: 80%;
+}
+
+#user_intro {
+	padding: 25px;
+}
+
+.user_info {
+	padding: 40px;
+	height: 500px;
+}
+
+.headshot {
+	width: 80%;
+	border-radius: 10px;
+	border: 3px solid white;
+	text-align: center;
+}
+
+
+
+

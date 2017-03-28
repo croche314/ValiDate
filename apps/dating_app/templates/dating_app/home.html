@@ -1,0 +1,41 @@
+{% include 'dating_app/header.html' %}
+{% load staticfiles %}
+<div id="container-fluid">
+	<h1 class="page_heading">Home</h1>
+	<div class="row">
+	{% for i in 'xxxx' %}
+		<div class="col-sm-3 user_info">
+			<a href="show_user/5">
+				<img class="headshot" src="{% static 'dating_app/denzel-washington.jpg' %}" alt="Denzel Washington"><br>
+				<h4>TheDenzelnator187</h4>
+			</a>
+			<br>
+			6'2"<br>
+			210 lbs<br>
+			Smokes: No<br>
+			Drinks: Hell Yes<br>
+			Wants children: not if I don't have to<br>
+			Fav language: C++<br>
+			Windows User
+
+		</div> <!-- .col -->
+
+		<div class="col-sm-3 user_info">
+			<a href="show_user/5">
+				<img class="headshot" src="{% static 'dating_app/17.jpg' %}" alt="croche314"><br>
+				<h4>croche314</h4>
+			</a>
+			<br>
+			5'10"<br>
+			180 lbs<br>
+			Smokes: Yes<br>
+			Drinks: Yes<br>
+			Wants children: someday<br>
+			Fav language: Python<br>
+			Mac User
+
+		</div> <!-- .col -->
+	{% endfor %}
+
+	</div> <!-- .row -->
+</div>

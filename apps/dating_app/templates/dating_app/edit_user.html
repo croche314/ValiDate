@@ -1,0 +1,42 @@
+{% include 'dating_app/header.html' %}
+	 {% load staticfiles %}
+
+  <script>
+  $( function() {
+    $( "#progressbar" ).progressbar({
+      value: 67
+    });
+  } );
+  </script>
+
+<div id="container-fluid">
+	<div class="row">
+		<div class="col-sm-2 center-block">
+			<img class="img-responsive" src="{% static 'dating_app/17.jpg' %}" alt="{{ request.session.username }} profile pic">
+			<br>
+			<a class="btn btn-success center center-block" href="edit_image.html">Change Profile Image</a>
+			<br>
+			Account status: <br>
+			<input type="checkbox" id="toggle_account">
+		</div> <!-- .col -->
+		<div class="col-sm-8">
+			<h1 class="page_heading">My Profile</h1>
+			<span class="center center-block">67% complete</span>
+			<div id="progressbar" class="center-block"></div>
+			<br>
+			<p id="user_intro" class="center-block">
+				Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+				tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+				quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+				consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+				cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+				proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+			</p>
+		</div> <!-- .col -->
+	</div> <!-- .row -->
+</div> <!-- #container-fluid -->
+<script>
+	$(document).ready(function () {
+		$("#toggle_account").toggleSwitch(onLabel="Active");
+	});
+</script>
