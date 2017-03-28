@@ -57,7 +57,7 @@ def create_user(request):
 			request.session['name'] = server_name
 
 			# If creation successful, redirect to Home page
-			return redirect('dating:home')
+			return redirect('dating:display_questions')
 
 		except:
 			print '-' * 50
@@ -129,25 +129,44 @@ def display_questions(request):
 	return render(request, 'dating_app/questionaire.html')
 
 def questions(request):
-    is_valid = True
-    if request.POST['html_age'] < 18:
-        messages.error(request, 'Must be 18 or older to Register for Validating.com')
-        is_valid = False
-    age = request.POST['html_age']
-    gender = request.POST['html_gender']
-    height = request.POST['html_height']
-    language = request.POST['html_language']
-    stack = request.POST['html_stack']
-    religion = request.POST['html_religion']
-    zipcode = request.POST['html_zip_code']
-    smoke = request.POST['html_smoke']
-    body = request.POST['html_body_type']
-    ethnicity  = request.POST['html_ethnicity']
-    children = request.POST['html_wants_children']
-
-    Answer.objects.create(age=age, gender=gender, height=height, language=language, stack=stack, religion=religion, zip_code=zipcode, smoke=smoke, body_type=body, ethnicity=ethnicity, wants_children=children,user_id=request.session['user_id'])
-
-    return redirect('dating:find_matches')
+	gender = request.POST['html_gender']
+	height = request.POST['html_height']
+	language = request.POST['html_language']
+	stack = request.POST['html_stack']
+	religion = request.POST['html_religion']
+	zipcode = request.POST['html_zip_code']
+	smoke = request.POST['html_smoke']
+	body = request.POST['html_body_type']
+	ethnicity  = request.POST['html_ethnicity']
+	children = request.POST['html_wants_children']
+	about_you = request.POST['html_about_you']
+	Answer.objects.create(gender=gender, height=height, language=language, stack=stack, religion=religion, zip_code=zipcode, smoke=smoke, body_type=body, ethnicity=ethnicity, wants_children=children,user_id=request.session['user_id'], about_you=about_you)
+	return redirect('dating:find_matches')
 
 def find_matches(request):
+	user = Answer.objects.get(id=request.session['user_id'])
+	answer_exclude = Answer.objects.exclude(id=request.session['user_id'])
+	print "++++++++++++++++++++++++++++++++++++"
+	print user.language
+	print len(answer_exclude)
+	for ans in answer_exclude:
+		counter = 0
+		if ans.gender != user.gender:
+			if ans.height > (user.height-300) and ans.height < (user.height-300):
+				counter += 1
+			if ans.zip_code == user.zip_code:
+				counter += 1
+			if ans.stack == user.stack:
+				counter += 2
+			if ans.religion == user.religion:
+				counter += 3
+			if ans.smoke == user.smoke:
+				counter += 1
+			if ans.body_type == user.body_type:
+				counter += 3
+			if ans.wants_children == user.wants_children:
+				counter += 1
+			if counter > 7:
+				Match.objects.create(user1 = request.session['user_id'], user2=ans.id)
+	print "++++++++++++++++++++++++++++++++++++"
  	return redirect('dating:home')

@@ -14,7 +14,6 @@ class User(models.Model):
 	updated_at = models.DateTimeField(auto_now=True)
 
 class Answer(models.Model):
-	age = models.IntegerField()
 	gender = models.CharField(max_length=10)
 	height = models.IntegerField()
 	language = models.CharField(max_length=10)
@@ -25,6 +24,7 @@ class Answer(models.Model):
 	body_type = models.CharField(max_length=20)
 	ethnicity = models.CharField(max_length=20)
 	wants_children = models.BooleanField()
+	about_you = models.TextField(max_length=1000)
 	user = models.ForeignKey(User, related_name='my_answers')
 	created_at = models.DateTimeField(auto_now_add=True)
 	updated_at = models.DateTimeField(auto_now=True)
@@ -32,6 +32,7 @@ class Answer(models.Model):
 class Match(models.Model):
 	user1 = models.ForeignKey(User, related_name='my_match')
 	user2 = models.ForeignKey(User, related_name='matched_me')
+	percent_match = models.IntegerField()
 	created_at = models.DateTimeField(auto_now_add=True)
 	updated_at = models.DateTimeField(auto_now=True)
 
@@ -47,6 +48,3 @@ class Message(models.Model):
 	receiver = models.ForeignKey(User,related_name='my_received')
 	created_at = models.DateTimeField(auto_now_add=True)
 	updated_at = models.DateTimeField(auto_now=True)
-
-
-

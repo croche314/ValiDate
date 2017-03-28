@@ -1,90 +1,158 @@
  {% include 'dating_app/header.html' %}
-
+ <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/rangeslider.js/2.3.0/rangeslider.min.css">
+ <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/rangeslider.js/2.3.0/rangeslider.min.css.map">
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/rangeslider.js/2.3.0/rangeslider.min.js"></script>
 
  <div id="container-fluid">
-    <h1>Questionaire</h1>
-    <form action="{% url 'dating:questions' %}" method="POST">
-    {% csrf_token %}
-    <label for="html_age">Age:</label>
-    <input type="number" name="html_age" value="">
+    <h1>Introduce Yourself</h1>
+    <div class="user_answers">
+    <table class="table table-striped">
 
-    <label for="html_gender">Gender</label>
-    <select name="html_gender">
-      <option value=""></option>
-      <option value="male">Male</option>
-      <option value="female">Female</option>
-    </select>
-
-    <label for="html_height">Height:</label>
-    <input type="text" name="html_height">
-
-    <label for="html_language">What is your Romance Language?</label>
-    <select name="html_language">
-      <option value=""></option>
-      <option value="python">Python</option>
-      <option value="html">Html</option>
-      <option value="javascript">Javascript</option>
-      <option value="ruby">Ruby</option>
-    </select>
-
-    <label for="html_stack">Front End, Back End or Full Stack?</label>
-    <select name="html_stack">
-      <option value=""></option>
-      <option value="full">Full Stack</option>
-      <option value="front">Front</option>
-      <option value="back">Back</option>
-    </select>
-
-    <label for="html_religion">What is your Religion?</label>
-    <select name="html_religion">
-      <option value=""></option>
-      <option value="Mac">Mac</option>
-      <option value="Windows">Windows</option>
-      <option value="Linux">Linux</option>
-    </select>
-
-    <label for="html_zip_code">Zip-code:</label>
-    <input type="text" name="html_zip_code" value="">
-
-    <label for="html_smoke">Do you smoke?</label>
-    <select name="html_smoke">
-      <option value=""></option>
-      <option value="True">True</option>
-      <option value="False">False</option>
-    </select>
-
-    <label for="html_body_type">What is your Body-type?</label>
-    <select name="html_body_type">
-      <option value=""></option>
-      <option value="slender">Slender</option>
-      <option value="Big and Beautiful">Big and Beautiful</option>
-      <option value="curvy">Curvy</option>
-      <option value="about average">About Average</option>
-      <option value="full-figured">Full-figured</option>
-      <option value="heavyset">Heavyset</option>
-      <option value="a few extra pounds">A few extra pounds</option>
-      <option value="stocky">Stocky</option>
-    </select>
-
-    <label for="html_ethnicity">Ethnicity</label>
-    <select name='html_ethnicity'>
-      <option value=""></option>
-      <option value="white">White</option>
-      <option value="african american">African American</option>
-      <option value="asian">Asian</option>
-      <option value="american indian">American Indian or Alaska Native</option>
-      <option value="hispanic">Hispanic or Lationo</option>
-    </select>
-
-    <label for="html_wants_children">Do you want to have child relationships?</label>
-    <select name="html_wants_children">
-      <option value=""></option>
-      <option value="True">True</option>
-      <option value="False">False</option>
-    </select>
-    <input type="submit" name="submit" value="Submit!">
-  </form>
-  </div> <!-- #container-fluid -->
+      <form action="{% url 'dating:questions' %}" method="POST">
+      {% csrf_token %}
+      <tr>
+        <td>
+          <label class='label label-info' for="html_gender">Gender</label>
+        </td>
+        <td>
+            <select name="html_gender">
+              <option value=""></option>
+              <option value="male">Male</option>
+              <option value="female">Female</option>
+            </select>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <label class="label label-info" for="html_height">Height:</label>
+          </td>
+          <td>
+            <input type="text" name="html_height" value="">
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <label class='label label-info' for="html_language">What is your Romance Language?</label>
+          </td>
+          <td>
+            <select name="html_language">
+              <option value=""></option>
+              <option value="python">Python</option>
+              <option value="html">Html</option>
+              <option value="javascript">Javascript</option>
+              <option value="ruby">Ruby</option>
+            </select>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <label class="label label-info" for="html_stack">Front End, Back End or Full Stack?</label>
+          </td>
+          <td>
+            <select name="html_stack">
+              <option value=""></option>
+              <option value="full">Full Stack</option>
+              <option value="front">Front End</option>
+              <option value="back">Back End</option>
+            </select>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <label class="label label-info" for="html_religion">What is your Religion?</label>
+          </td>
+          <td>
+            <select name="html_religion">
+              <option value=""></option>
+              <option value="Mac">Mac</option>
+              <option value="Windows">Windows</option>
+              <option value="Linux">Linux</option>
+            </select>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <label class="label label-info" for="html_zip_code">Zip-code:</label>
+          </td>
+          <td>
+            <input type="text" name="html_zip_code" value="">
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <label class="label label-info" for="html_smoke">Do you smoke?</label>
+          </td>
+          <td>
+            <select name="html_smoke">
+              <option value=""></option>
+              <option value="True">True</option>
+              <option value="False">False</option>
+            </select>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <label class="label label-info" for="html_body_type">What is your Body-type?</label>
+          </td>
+          <td>
+            <select name="html_body_type">
+              <option value=""></option>
+              <option value="slender">Slender</option>
+              <option value="Big and Beautiful">Big and Beautiful</option>
+              <option value="curvy">Curvy</option>
+              <option value="about average">About Average</option>
+              <option value="full-figured">Full-figured</option>
+              <option value="heavyset">Heavyset</option>
+              <option value="a few extra pounds">A few extra pounds</option>
+              <option value="stocky">Stocky</option>
+            </select>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <label class="label label-info" for="html_ethnicity">Ethnicity</label>
+          </td>
+          <td>
+            <select name='html_ethnicity'>
+              <option value=""></option>
+              <option value="white">White</option>
+              <option value="african american">African American</option>
+              <option value="asian">Asian</option>
+              <option value="american indian">American Indian or Alaska Native</option>
+              <option value="hispanic">Hispanic or Lationo</option>
+            </select>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <label class="label label-info" for="html_wants_children">Do you want to have children?</label>
+          </td>
+          <td>
+            <select name="html_wants_children">
+              <option value=""></option>
+              <option value="True">True</option>
+              <option value="False">False</option>
+            </select>
+          </td>
+        </tr>
+        <tr>
+          <tr>
+            <td>
+              <label class="label label-info" for="html_about_you">Describe Yourself</label>
+            </td>
+            <td>
+              <input type="textarea" cols='70' rows=40 name="html_about_you" value="">
+            </td>
+          </tr>
+          <td>
+            <input class="btn-danger" type="submit" name="submit" value="Submit!">
+          </td>
+        </tr>
+    </form>
+    <a href="{% url 'dating:find_matches' %}">Test</a>
+  </table>
+  </div>
+  </div><!-- #container-fluid -->
 
   </body>
 </html>
