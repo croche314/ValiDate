@@ -85,6 +85,7 @@ a {
 }
 
 #show_user_sidebar img {
+	margin-top: 10px;
 	border: 2px solid black;
 	box-shadow: 1px 1px 2px black;
 }
@@ -93,7 +94,7 @@ a {
 	border-radius: 10px;
 }
 
-#progressbar {
+.progressbar {
 	width: 80%;
 }
 
@@ -153,6 +154,42 @@ a {
 	display: block;
 	width: 100%;
 }
+
+#file_upload {
+	border: 2px solid white;
+	width: 20%;
+	padding: 10px;
+	margin: 0 auto;
+	text-align: center;
+}
+
+#message_form {
+	padding: 50px;
+}
+
+#message_form textarea {
+	display: block;
+	width: 60%;
+	margin: 50px auto;
+	color: #333;
+}
+
+#message_form h2 {
+	font-size: 20px;
+}
+
+.one_message {
+	padding: 50px 100px;
+	font-size: 20px;
+}
+.one_message label {
+
+}
+
+.message_username {
+
+}
+
 
 /*************************
     Small-screen devices
