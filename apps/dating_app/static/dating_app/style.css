@@ -68,7 +68,10 @@ header{
 
 .page_heading {
 	text-align: center;
+	width: 50%;
+	margin: 0 auto;
 	padding: 25px 0;
+	border-bottom: 3px solid white;
 }
 
 .center {
@@ -155,9 +158,14 @@ a {
 	width: 100%;
 }
 
+.advertisement {
+	width: 100%;
+}
+
 #file_upload {
 	border: 2px solid white;
-	width: 20%;
+	border-radius: 5px;
+	width: 40%;
 	padding: 10px;
 	margin: 0 auto;
 	text-align: center;
@@ -179,15 +187,24 @@ a {
 }
 
 .one_message {
+	display: block;
+	width: 50%;
+	margin: 0 auto;
 	padding: 50px 100px;
+	border-bottom: 3px solid white;
 	font-size: 20px;
 }
-.one_message label {
 
+.one_message label, .message_username {
+	
+}
+.one_message p {
+ 	font-size: 30px;
+ 	color: #333;
 }
 
-.message_username {
-
+.one_message textarea {
+ 	color: #333;
 }
 
 

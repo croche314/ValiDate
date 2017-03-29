@@ -266,16 +266,10 @@ def create_message(request,receiver_id):
 
 def show_my_messages(request,user_id):
 	this_user = User.objects.get(id=user_id)
-	sent_messages = Message.objects.filter(sender_id=user_id)
-	received_messages = Message.objects.filter(receiver_id=user_id)
+	sent_messages = Message.objects.filter(sender_id=user_id).order_by('-created_at')
+	received_messages = Message.objects.filter(receiver_id=user_id).order_by('-created_at')
 	all_messages = list(chain(sent_messages,received_messages))
-	for message in all_messages:
-		print '-' * 50
-		print 'sender:',message.sender.username
-		print 'receiver:',message.receiver.name
-		print 'message:',message.text
-		print '-' * 50
-
+	
 	context = {
 		'all_my_messages': all_messages
 	}
