@@ -8,13 +8,16 @@
     });
   } );
   </script>
-
   <style type="text/css">
   	#user_answers {
-  		font-size: 20px;
   		color: #333;
   	}
+
+  	#user_answers textarea {
+  		font-size: 14px;
+  	}
   </style>
+
 
 <div id="container-fluid">
 	<div class="row">
@@ -32,20 +35,21 @@
 			<span class="center center-block">67% complete</span>
 			<div id="progressbar" class="center-block"></div>
 			<br>
-			<p id="user_intro" class="center-block">
-				Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-				tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-				quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-				consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-				cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-				proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-			</p>
+			
+			<!-- User Answers -->
 			<div id="user_answers">
-				<form action="{% url 'dating:update_user' user_id=request.session.user_id%}" method="post">
-					<table class="table">
+				<form action="{% url 'dating:update_user' answer_id=answers.id %}" method="post">
+					{% csrf_token %}
+					<!-- User's 'about_you' field might be blank, but if it's not, display its contents -->
+					<textarea name="html_about_you" class="center-block">{% if answers.about_you == "" %}Tell your potential matches about yourself...{% else %}{{answers.about_you}}{% endif %}</textarea>
+					<table>
 						<tr>
 							<td><label class="label label-info">Name:</label></td>
 							<td><input type="text" name="html_name" value="{{user.name}}"></td>
+						</tr>
+						<tr>
+							<td><label class="label label-info">Username:</label></td>
+							<td><input type="text" name="html_username" value="{{user.username}}"></td>
 						</tr>
 						<tr>
 							<td><label class="label label-info">Age:</label></td>
@@ -156,6 +160,7 @@
 		</div> <!-- .col -->
 	</div> <!-- .row -->
 </div> <!-- #container-fluid -->
+
 <script>
 	$(document).ready(function () {
 		$("#toggle_account").toggleSwitch(onLabel="Active");

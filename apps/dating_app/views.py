@@ -4,6 +4,9 @@ from django.core.urlresolvers import reverse
 from .models import *
 import bcrypt, re
 
+from django.conf import settings
+from django.core.files.storage import FileSystemStorage
+
 # Login and Registration
 def index(request):
 	if 'username' in request.session:
@@ -122,7 +125,7 @@ def logout(request):
 	return redirect('dating:index')
 
 def show_user(request,user_id):
-	this_user = User.objects.get(id=request.session['user_id'])
+	this_user = User.objects.get(id=user_id)
 	my_answers = Answer.objects.get(user_id=this_user.id)
 	
 	context = {
@@ -141,6 +144,9 @@ def edit_user(request,user_id):
 	else:
 		this_user = User.objects.get(id=request.session['user_id'])
 		my_answers = Answer.objects.get(user_id=this_user.id)
+		print '-' * 50
+		print 'my_answers:', my_answers.id
+		print '-' * 50
 		
 		context = {
 			'user': this_user,
@@ -148,8 +154,31 @@ def edit_user(request,user_id):
 		}
 		return render(request, 'dating_app/edit_user.html', context)
 
-def update_user(request, user_id):
-	pass
+def update_user(request, answer_id):
+	name = request.POST['html_name']
+	username = request.POST['html_username']
+	age = request.POST['html_age']
+	gender = request.POST['html_gender']
+	height = request.POST['html_height']
+	language = request.POST['html_language']
+	stack = request.POST['html_stack']
+	religion = request.POST['html_religion']
+	smoke = request.POST['html_smoke']
+	body = request.POST['html_body_type']
+	ethnicity  = request.POST['html_ethnicity']
+	children = request.POST['html_wants_children']
+	about_you = request.POST['html_about_you']
+
+	# If any fields are blank, send back to edit_user
+	if len(gender)<1 or len(height)<1 or len(language)<1 or len(stack)<1 or len(religion)<1 or len(smoke)<1 or len(body)<1 or len(ethnicity)<1 or len(children)<1 or len(about_you)<1:
+		messages.warning(request, 'Make sure all fields are filled in')
+		return redirect('dating:edit_user')
+	else: # If valid, update answers
+		Answer.objects.filter(id=answer_id).update(gender=gender,height=height,language=language,stack=stack,religion=religion,smoke=smoke,body_type=body,ethnicity=ethnicity,wants_children=children,about_you=about_you)
+		User.objects.filter(id=request.session['user_id']).update(name=name,username=username,age=age)
+		messages.success(request, 'Answers updated!')
+		return redirect(reverse('dating:show_user',kwargs={'user_id': request.session['user_id']}))
+
 
 def display_questions(request):
 	return render(request, 'dating_app/questionaire.html')
@@ -195,4 +224,17 @@ def find_matches(request):
 			if counter > 7:
 				Match.objects.create(user1 = request.session['user_id'], user2=ans.id)
 	print "++++++++++++++++++++++++++++++++++++"
+
  	return redirect('dating:home')
+
+def simple_upload(request):
+	if request.method == 'POST' and request.FILES['myfile']:
+	    myfile = request.FILES['myfile']
+	    fs = FileSystemStorage()
+	    filename = fs.save(myfile.name, myfile)
+	    uploaded_file_url = fs.url(filename)
+	    print 'url:', uploaded_file_url
+	    return render(request, 'dating_app/home.html', {
+	        'uploaded_file_url': uploaded_file_url
+	    })
+	return render(request, 'dating_app/home.html')

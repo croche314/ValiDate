@@ -3,14 +3,20 @@
  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/rangeslider.js/2.3.0/rangeslider.min.css.map">
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/rangeslider.js/2.3.0/rangeslider.min.js"></script>
 
+<style type="text/css">
+  #user_answers {
+    color: #333;
+  }
+</style>
+
  <div id="container-fluid">
 
-    <h1>Introduce Yourself</h1>
-    <div class="user_answers">
-    <table class="table table-striped">
+    <h1 class="page_heading">Introduce Yourself</h1>
+    <div id="user_answers">
 
       <form action="{% url 'dating:questions' %}" method="POST">
       {% csrf_token %}
+      <table>
       <tr>
         <td>
           <label class='label label-info' for="html_gender">Gender</label>
@@ -137,21 +143,17 @@
           </td>
         </tr>
         <tr>
-          <tr>
-            <td>
-              <label class="label label-info" for="html_about_you">Describe Yourself</label>
-            </td>
-            <td>
-              <input type="textarea" cols='70' rows=40 name="html_about_you" value="">
-            </td>
-          </tr>
           <td>
-            <input class="btn-danger" type="submit" name="submit" value="Submit!">
+            <label class="label label-info" for="html_about_you">Describe Yourself</label>
+          </td>
+          <td>
+            <input type="textarea" cols='70' rows=40 name="html_about_you" value="">
           </td>
         </tr>
+      </table>
+      <input class="btn btn-danger center-block" type="submit" name="submit" value="Submit!">
     </form>
     <a href="{% url 'dating:find_matches' %}">Test</a>
-  </table>
   </div>
   </div><!-- #container-fluid -->
 

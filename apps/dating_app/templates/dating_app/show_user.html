@@ -9,39 +9,48 @@
   } );
   </script>
 
-  <style type="text/css">
-  	#user_answers {
-  		font-size: 20px;
-  		color: #333;
-  	}
-  </style>
-
 <div id="container-fluid">
 	<div class="row">
-		<div class="col-sm-2 center-block">
+		<!-- Left Sidebar -->
+		<div id="show_user_sidebar" class="col-sm-2 center-block">
 			<img class="img-responsive" src="{% static 'dating_app/17.jpg' %}" alt="{{ request.session.username }} profile pic">
 			<br>
-			<a class="btn btn-success center center-block" href="edit_image.html">Change Profile Image</a>
-			<br>
-			Account status: <br>
-			<input type="checkbox" id="toggle_account">
-			<br><br>
-			<a class="btn btn-danger center-block" href="{% url 'dating:edit_user' user_id=request.session.user_id %}">Edit Profile</a>
+
+			<!-- If this is the current user's profile, show edit buttons -->
+			{% if user.id == request.session.user_id %}
+				<a class="btn btn-success center center-block" href="edit_image.html">Change Image</a>
+				<br>
+				Account status: <br>
+				<input type="checkbox" id="toggle_account">
+				<br><br>
+				<a class="btn btn-danger center-block" href="{% url 'dating:edit_user' user_id=request.session.user_id %}">Edit Profile</a>
+
+			<!-- Or if this is not the current user's profile, show poke, message, etc. buttons -->
+			{% else %}
+				<a class="btn btn-success center-block" href="poke.html">Poke Me</a>
+				<br>
+				<a class="btn btn-primary center-block" href="message.html">Message Me</a>
+
+			{% endif %}
+
 		</div> <!-- .col -->
+
+		<!-- Main Content (Center) -->
 		<div class="col-sm-8">
-			<h1 class="page_heading">My Profile</h1>
+			<h1 class="page_heading">{{user.username}}</h1>
 			<span class="center center-block">67% complete</span>
 			<div id="progressbar" class="center-block"></div>
 			<br>
+			<!-- User's 'about_you' field might be blank, but if it's not, display its contents -->
 			<p id="user_intro" class="center-block">
-				Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-				tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-				quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-				consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-				cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-				proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+				{% if answers.about_you == "" %}
+					Tell your potential matches more about yourself <a href="{% url 'dating:edit_user' user_id=request.session.id %}"> here </a>
+				{% else %}
+					{{answers.about_you}} 
+				{% endif %}
 			</p>
 
+			<!-- User Answers -->
 			<div id="user_answers">
 				<table>
 					<tr>
@@ -79,13 +88,77 @@
 					</tr>
 
 				</table>
-				<a class="btn btn-danger center-block" href="{% url 'dating:edit_user' user_id=request.session.user_id %}">Edit Profile</a>
+				<br>
+				<!-- If this the logged-in user's profile, allow them to edit it -->
+				{% if user.id == request.session.user_id %}
+					<a class="btn btn-danger center-block" href="{% url 'dating:edit_user' user_id=request.session.user_id %}">Edit Profile</a>
+				{% endif %}
 			</div> <!-- #user_answers -->
 		</div> <!-- .col -->
+
+		<!-- Right Sidebar -->
+		<div id="show_user_right_sidebar" class="col-sm-2">
+		<!-- If this is current user's profile, show matches on the right -->
+		{% if user.id == request.session.user_id %}
+			<h4 class="center">Your Best Matches</h4>
+			<div class="row">
+				<div class="col-sm-12 user_match">
+					<a href="show_user/2">
+						<img class="headshot center-block" src="{% static 'dating_app/denzel-washington.jpg' %}" alt="Denzel Washington"><br>
+						<h4 class="center">TheDenzelnator187</h4>
+					</a>
+				</div> <!-- .col -->
+			</div><!-- .row -->
+
+			<div class="row">
+				<div class="col-sm-12 user_match">
+					<a href="show_user/1">
+						<img class="headshot center-block" src="{% static 'dating_app/17.jpg' %}" alt="croche314"><br>
+						<h4 class="center">croche314</h4>
+					</a>
+				</div> <!-- .col -->
+			</div><!-- .row -->
+		{% else %}
+		<div class="row">
+			<div class="col-sm-12 user_match">
+				<h5 class="center">Advertisement</h5>
+				<a href="http://codingdojo.com">
+					<img class="headshot center-block" src="{% static 'dating_app/coding_dojo_banner_ad.png' %}" alt="Coding Dojo ad"><br>
+				</a>
+			</div> <!-- .col -->
+		</div><!-- .row -->
+		{% endif %}
+		</div> <!-- .col (Left Sidebar) -->
 	</div> <!-- .row -->
+
+	<!-- Second Row: More Pictures -->
+	{% if user.id != request.session.user_id %}
+	<div class="row">
+		<h4 class="center">More pictures of {{user.username}}</h4>
+		{% for i in 'xxxxxxxxxx' %}
+		<div class="col-sm-2">
+			<a href="{% static 'dating_app/17.jpg' %}">
+				<img class="show_user_pic center-block" src="{% static 'dating_app/17.jpg' %}" alt="croche314">
+				<br>
+			</a>
+		</div> <!-- .col -->
+		{% endfor %}
+	</div> <!-- .row -->
+	{% endif %}
+
+	<!-- File upload -->
+	<form method="post" enctype="multipart/form-data">
+	<h4 class="center">Upload Image</h4>
+    {% csrf_token %}
+	    <input type="file" name="myfile">
+	    <input class="btn btn-danger" type="submit" value="Upload">
+  	</form>
+
 </div> <!-- #container-fluid -->
 <script>
 	$(document).ready(function () {
-		$("#toggle_account").toggleSwitch(onLabel="Active");
+		$("#toggle_account").toggleSwitch();
+		$("#toggle_account").toggleCheckedState("On")
+
 	});
 </script>

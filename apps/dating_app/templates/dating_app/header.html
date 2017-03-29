@@ -16,7 +16,7 @@
 	 <!-- Bootstrap JS -->
 	<script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 	 <!-- Fonts -->
-	<link href="https://fonts.googleapis.com/css?family=Pacifico|Open+Sans:300" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css?family=Pacifico|Open+Sans:300,600" rel="stylesheet">
 	<!-- Custom Styles -->
 	 <link rel="stylesheet" type="text/css" href="{% static 'dating_app/style.css' %}">
 </head>
@@ -26,21 +26,60 @@
 		<p>{{message}}</p>
 	{% endfor %}
 {% endif %}
-	<header>
-		<a href="{% url 'dating:home' %}">
+	<header class="row">
+		<div class="col-sm-6 hidden-xs">
+			<a href="{% url 'dating:home' %}">
 			<div id="branding">
-				<img class="img-responsive" src="{% static 'dating_app/logo.png' %}" alt="ValiDating Logo">
-				<h1>ValiDate.com</h1>
-				<h2>Online Dating for Coders</h2>
+				<img class="img-responsive" src="{% static 'dating_app/ValiDate_logo.png' %}" alt="ValiDate Logo">
 			</div>
 		</a>
-		<a href="{% url 'dating:home' %}">Home</a>
-		&nbsp;|&nbsp;
-		<a href="{% url 'dating:show_user' user_id=request.session.user_id %}">View My Profile</a>
-		&nbsp;|&nbsp;
-		<a href="{% url 'dating:display_questions' %}">Questionaire</a>
-		&nbsp;|&nbsp;
-		<a href="{% url 'dating:logout' %}">Log out</a>
+		</div> <!-- .col -->
+		
+		<!-- Main Navigation -->
+		<!-- Hidden when screen is xs -->
+		<div id="main_navigation hidden-xs" class="col-sm-6">
+		<br><br>
+			<nav >
+			<a href="{% url 'dating:home' %}">Home</a>
+			&nbsp;|&nbsp;
+			<a href="{% url 'dating:show_user' user_id=request.session.user_id %}">View My Profile</a>
+			&nbsp;|&nbsp;
+			<a href="{% url 'dating:display_questions' %}">Questionaire</a>
+			&nbsp;|&nbsp;
+			<a href="{% url 'dating:logout' %}">Log out</a>
+		</nav>
+		</div> <!-- .col -->
 
+		<!-- Mobile Navigation -->
+        <!-- Appears only when screen size is 'xs' -->
+        <div class="col-xs-12 visible-xs">
+            <nav id="mobile-nav" class="navbar navbar-inverse visible-xs" role="navigation">
+                <div class="container">
+                
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#mobile-menu">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    </button>
+                    <a href="{% url 'dating:home' %}">
+                    <img src="{% static 'dating_app/logo.png' %}" alt="computer logo">
+                    	<h1 class="branding">ValiDate.com</h1>
+                </a>
+                </div>
+               
+
+                <div class="collapse navbar-collapse" id="mobile-menu">
+                    <ul class="nav navbar-nav">
+                        <li><a href="{% url 'dating:home' %}">Home</a></li>
+                        <li><a href="{% url 'dating:show_user' user_id=request.session.user_id %}">View My Profile</a></li>
+                        <li><a href="{% url 'dating:display_questions' %}">Questionaire</a></li>
+                        <li><a href="{% url 'dating:logout' %}">Log out</a></li>
+                    </ul>
+                </div><!-- /.navbar-collapse -->
+              <!-- /.container-fluid -->
+            </nav> <!-- end Mobile Navigation -->
+        </div>
+		
 
 	</header>
