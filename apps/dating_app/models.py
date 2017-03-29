@@ -25,7 +25,7 @@ class Answer(models.Model):
 	ethnicity = models.CharField(max_length=20)
 	wants_children = models.BooleanField()
 	about_you = models.TextField(max_length=1000)
-	user = models.ForeignKey(User, related_name='my_answers')
+	user = models.OneToOneField(User, related_name='my_answers')
 	created_at = models.DateTimeField(auto_now_add=True)
 	updated_at = models.DateTimeField(auto_now=True)
 

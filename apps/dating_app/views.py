@@ -118,9 +118,14 @@ def home(request):
 	print '[user_id]:',request.session['user_id']
 	print '-' * 50
 	context = {
-		'match': Match.objects.all(),
-		'user': User.objects.all()
+		'match': Match.objects.filter(user1_id = request.session['user_id']),
+		'match2': Match.objects.filter(user2_id=request.session['user_id']),
+		'all_users': User.objects.exclude(id=request.session['user_id']),
 	}
+
+	# for u in context:
+	# 	for user in u:
+	# 		print u
 	return render(request, 'dating_app/home.html', context)
 
 def logout(request):
@@ -200,13 +205,10 @@ def questions(request):
 def find_matches(request):
 	user = Answer.objects.get(id=request.session['user_id'])
 	answer_exclude = Answer.objects.exclude(id=request.session['user_id'])
-	print "++++++++++++++++++++++++++++++++++++"
-	print user.language
-	print len(answer_exclude)
 	for ans in answer_exclude:
 		counter = 0
 		if ans.gender != user.gender:
-			if ans.height > (user.height-300) and ans.height < (user.height-300):
+			if ans.height > (user.height-10) and ans.height < (user.height-10):
 				counter += 1
 			if ans.zip_code == user.zip_code:
 				counter += 1
@@ -220,10 +222,12 @@ def find_matches(request):
 				counter += 3
 			if ans.wants_children == user.wants_children:
 				counter += 1
-			if counter > 7:
-				Match.objects.create(user1 = request.session['user_id'], user2=ans.id)
-	print "++++++++++++++++++++++++++++++++++++"
-
+			if counter > 5:
+				percent_match= (float(counter)/15)*100
+				int(percent_match)
+				Match.objects.create(user1_id = user.id, user2_id =ans.id, percent_match=percent_match)
+				print counter
+				print str(percent_match) +"-------------"
  	return redirect('dating:home')
 
 def simple_upload(request):

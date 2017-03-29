@@ -93,7 +93,7 @@ a {
 	border-radius: 10px;
 }
 
-#progressbar {
+.progressbar {
 	width: 80%;
 }
 
@@ -185,5 +185,3 @@ a {
     	width: 400px;
     }
 }
-
-
