@@ -144,9 +144,6 @@ def edit_user(request,user_id):
 	else:
 		this_user = User.objects.get(id=request.session['user_id'])
 		my_answers = Answer.objects.get(user_id=this_user.id)
-		print '-' * 50
-		print 'my_answers:', my_answers.id
-		print '-' * 50
 		
 		context = {
 			'user': this_user,
