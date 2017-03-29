@@ -15,7 +15,9 @@ class User(models.Model):
 
 class Answer(models.Model):
 	gender = models.CharField(max_length=10)
-	height = models.IntegerField()
+	height = models.FloatField()
+	feet = models.IntegerField()
+	inches = models.IntegerField()
 	language = models.CharField(max_length=10)
 	zip_code = models.IntegerField()
 	stack = models.CharField(max_length=15)

@@ -3,7 +3,9 @@
 <div id="container-fluid">
 	<h1 class="page_heading">Home</h1>
 	<div class="row">
+		{% if match or match2 %}
 		<h1>Matched with you</h1>
+		{% endif %}
 	{% for user in match %}
 		<div class="col-sm-3 user_info">
 			<a href="{% url 'dating:show_user' user_id=user.user2_id %}">
@@ -11,7 +13,7 @@
 				<h4>{{user.user2.username}}</h4>
 			</a>
 			<br>
-			height: {{user.user2.my_answers.height}}<br>
+			height: {{user.user2.my_answers.feet}} ' {{user.user2.my_answers.inches}} ''<br>
 			Smokes: {{user.user2.my_answers.smoke}}<br>
 			Wants children: {{user.user2.my_answers.wants_children}}<br>
 			Romance language: {{user.user2.my_answers.language}}<br>
@@ -27,12 +29,28 @@
 				<h4>{{user.user1.username}}</h4>
 			</a>
 			<br>
-			height: {{user.user1.my_answers.height}}<br>
+			height: {{user.user1.my_answers.feet}} ' {{user.user1.my_answers.inches}} ''<br>
 			Smokes: {{user.user1.my_answers.smoke}}<br>
 			Wants children: {{user.user1.my_answers.wants_children}}<br>
 			Romance language: {{user.user1.my_answers.language}}<br>
 			Religion: {{user.user1.my_answers.religion}}<br>
 			Percent Match: {{user.percent_match}} %
+
+		</div> <!-- .col -->
+		{% endfor %}
+		<h1>Looking for Love</h1>
+		{% for user in all_users %}
+		<div class="col-sm-3 user_info">
+			<a href="{% url 'dating:show_user' user_id=user.id %}">
+				<img class="headshot" src="{% static 'dating_app/17.jpg' %}" alt="croche314"><br>
+				<h4>{{user.username}}</h4>
+			</a>
+			<br>
+			height: {{user.my_answers.feet}} ' {{user.my_answers.inches}} ''<br>
+			Smokes: {{user.my_answers.smoke}}<br>
+			Wants children: {{user.my_answers.wants_children}}<br>
+			Romance language: {{user.my_answers.language}}<br>
+			Religion: {{user.my_answers.religion}}<br>
 
 		</div> <!-- .col -->
 		{% endfor %}

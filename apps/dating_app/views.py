@@ -121,7 +121,7 @@ def home(request):
 	context = {
 		'match': Match.objects.filter(user1_id = request.session['user_id']),
 		'match2': Match.objects.filter(user2_id=request.session['user_id']),
-		'all_users': User.objects.exclude(id=request.session['user_id']),
+		'all_users': User.objects.exclude(my_match=request.session['user_id']),
 	}
 
 	# for u in context:
@@ -170,7 +170,9 @@ def update_user(request, answer_id):
 	username = request.POST['html_username']
 	age = request.POST['html_age']
 	gender = request.POST['html_gender']
-	height = request.POST['html_height']
+	feet = request.POST['html_feet']
+	inches = request.POST['html_inches']
+	height = float(feet) + float(inches)/12
 	language = request.POST['html_language']
 	stack = request.POST['html_stack']
 	religion = request.POST['html_religion']
@@ -186,9 +188,35 @@ def update_user(request, answer_id):
 		return redirect('dating:edit_user')
 	else: # If valid, update answers
 		Answer.objects.filter(id=answer_id).update(gender=gender,height=height,language=language,stack=stack,religion=religion,smoke=smoke,body_type=body,ethnicity=ethnicity,wants_children=children,about_you=about_you)
-		User.objects.filter(id=request.session['user_id']).update(name=name,username=username,age=age)
+		User.objects.filter(id=request.session['user_id']).update(name=name,username=username,age=age, feet=feet, inches=inches)
 		messages.success(request, 'Answers updated!')
+		Match.objects.filter(user1_id=request.session['user_id']).delete()
+		Match.objects.filter(user2_id=request.session['user_id']).delete()
+		user = Answer.objects.get(id=request.session['user_id'])
+		answer_exclude = Answer.objects.exclude(id=request.session['user_id'])
+		for ans in answer_exclude:
+			counter = 0
+			if ans.gender != user.gender:
+				if ans.height > (user.height-10) and ans.height < (user.height-10):
+					counter += 1
+				if ans.zip_code == user.zip_code:
+					counter += 1
+				if ans.stack == user.stack:
+					counter += 2
+				if ans.religion == user.religion:
+					counter += 3
+				if ans.smoke == user.smoke:
+					counter += 1
+				if ans.body_type == user.body_type:
+						counter += 3
+				if ans.wants_children == user.wants_children:
+					counter += 1
+				if counter > 5:
+					percent_match= (float(counter)/12)*100
+					int(percent_match)
+					Match.objects.create(user1_id = user.id, user2_id =ans.id, percent_match=percent_match)
 		return redirect(reverse('dating:show_user',kwargs={'user_id': request.session['user_id']}))
+
 
 
 def display_questions(request):
@@ -196,7 +224,9 @@ def display_questions(request):
 
 def questions(request):
 	gender = request.POST['html_gender']
-	height = request.POST['html_height']
+	feet = request.POST['html_feet']
+	inches = request.POST['html_inches']
+	height = float(feet) + float(inches)/12
 	language = request.POST['html_language']
 	stack = request.POST['html_stack']
 	religion = request.POST['html_religion']
@@ -206,7 +236,7 @@ def questions(request):
 	ethnicity  = request.POST['html_ethnicity']
 	children = request.POST['html_wants_children']
 	about_you = request.POST['html_about_you']
-	Answer.objects.create(gender=gender, height=height, language=language, stack=stack, religion=religion, zip_code=zipcode, smoke=smoke, body_type=body, ethnicity=ethnicity, wants_children=children,user_id=request.session['user_id'], about_you=about_you)
+	Answer.objects.create(gender=gender, height=height, language=language, stack=stack, religion=religion, zip_code=zipcode, smoke=smoke, body_type=body, ethnicity=ethnicity, wants_children=children,user_id=request.session['user_id'], about_you=about_you, feet=feet, inches=inches)
 	return redirect('dating:find_matches')
 
 def find_matches(request):
@@ -230,7 +260,7 @@ def find_matches(request):
 			if ans.wants_children == user.wants_children:
 				counter += 1
 			if counter > 5:
-				percent_match= (float(counter)/15)*100
+				percent_match= (float(counter)/12)*100
 				int(percent_match)
 				Match.objects.create(user1_id = user.id, user2_id =ans.id, percent_match=percent_match)
 				print counter
@@ -254,7 +284,7 @@ def new_message(request,receiver_id):
 		'receiver': receiver
 	}
 	return render(request, 'new_message.html', context)
-	
+
 def create_message(request,receiver_id):
 	sender = User.objects.get(id=request.session['user_id'])
 	receiver = User.objects.get(id=receiver_id)
@@ -280,4 +310,3 @@ def show_my_messages(request,user_id):
 		'all_my_messages': all_messages
 	}
 	return render(request, 'dating_app/my_messages.html', context)
-

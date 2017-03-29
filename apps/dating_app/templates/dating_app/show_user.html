@@ -47,7 +47,7 @@
 				{% if answers.about_you == "" %}
 					Tell your potential matches more about yourself <a href="{% url 'dating:edit_user' user_id=request.session.id %}"> here </a>
 				{% else %}
-					{{answers.about_you}} 
+					{{answers.about_you}}
 				{% endif %}
 			</p>
 
@@ -64,7 +64,7 @@
 						<td><label class="label label-info">Gender:</label></td><td>{{answers.gender}}</td>
 					</tr>
 					<tr>
-						<td><label class="label label-info">Height:</label></td><td>{{answers.height}} inches</td>
+						<td><label class="label label-info">Height:</label></td><td>{{answers.feet}}' {{answers.inches}} ''</td>
 					</tr>
 					<tr>
 						<td><label class="label label-info">Favorite language:</label></td><td>{{answers.language}}</td>
