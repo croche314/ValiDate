@@ -9,9 +9,16 @@ header{
 	background-color: #305252;
 }
 
-#container-fluid {
-	padding: 25px;
-	color: black;
+.container-fluid {
+	margin: 0;
+}
+
+#mobile-nav .container {
+	padding: 0;
+}
+
+.row {
+	margin: 0;
 }
 
 #branding {
@@ -29,6 +36,7 @@ header{
 #branding h1 {
 	font-family: 'Pacifico';
 	font-size: 50px;
+	text-shadow: 2px 2px black;
 	display: inline-block;
 	margin: 0 0 0 15px;
 }
@@ -37,6 +45,15 @@ header{
 	font-size: 16px;
 	margin: -15px 0 0 100px;
 	font-style: italic;
+}
+
+#main_navigation a {
+	text-transform: uppercase;
+	font-weight: 600;
+}
+
+#main_navigation a:hover {
+	color: #333;
 }
 
 .call_to_action {
@@ -67,12 +84,22 @@ a {
 	color: white;
 }
 
+#show_user_sidebar img {
+	border: 2px solid black;
+	box-shadow: 1px 1px 2px black;
+}
+
+#show_user_right_sidebar {
+	border-radius: 10px;
+}
+
 #progressbar {
 	width: 80%;
 }
 
 #user_intro {
-	padding: 25px;
+	width: 80%;
+	padding: 25px 0;
 }
 
 .user_info {
@@ -87,15 +114,76 @@ a {
 	text-align: center;
 }
 
+.show_user_pic {
+	width: 100%;
+	border-radius: 10px;
+	border: 3px solid white;
+	text-align: center;
+}
+
+.user_match {
+	width: 100%;
+	padding: 5px 5px;
+}
+
+#show_user_right_sidebar .headshot {
+}
+
 #user_answers {
 	width: 50%;
 	margin: 25px auto;
+	font-size: 20px;
 }
 
-#user_answers td {
-	padding: 10px;
+#user_answers table {
+	width: 100%;
 }
 
+#user_answers td, #user_answers textarea {
+	padding: 5px;
+}
 
+#user_answers textarea {
+	width: 100%;
+	min-height: 200px;
+	margin: 0 auto;
+}
+
+#user_answers input[type='submit']{
+	display: block;
+	width: 100%;
+}
+
+/*************************
+    Small-screen devices
+*************************/
+@media only screen and (max-width: 768px) {
+	header .col-xs-12 {
+		padding: 0;
+	}
+
+	#mobile-nav {
+		background-color: #305252;
+        position: fixed;
+        z-index: 99;
+        top: 0;
+        width: 100%;
+        border: 3px solid black;
+    }
+
+    #mobile-nav img, #mobile-nav h1 {
+    	display: inline-block;
+    }
+
+    h1.branding {
+    	font-family: 'Pacifico';
+    	vertical-align: bottom;
+    	margin-left: 15px;
+    }
+
+    .headshot {
+    	width: 400px;
+    }
+}
 
 

@@ -5,7 +5,7 @@
 	<div class="row">
 	{% for u in user %}
 		<div class="col-sm-3 user_info">
-			<a href="{% url 'dating:match_show' user_id=u.id %}">
+			<a href="{% url 'dating:show_user' user_id=u.id %}">
 				<img class="headshot" src="{% static 'dating_app/denzel-washington.jpg' %}" alt="Denzel Washington"><br>
 				<h4>{{u.username}}</h4>
 			</a>
@@ -21,9 +21,9 @@
 		</div> <!-- .col -->
 
 		<div class="col-sm-3 user_info">
-			<a href="show_user/5">
+			<a href="show_user/1">
 				<img class="headshot" src="{% static 'dating_app/17.jpg' %}" alt="croche314"><br>
-				<h4>croche314</h4>
+				<h4>BigDaddy</h4>
 			</a>
 			<br>
 			5'10"<br>
