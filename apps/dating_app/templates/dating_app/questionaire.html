@@ -6,7 +6,7 @@
  <div id="container-fluid">
 
     <h1>Introduce Yourself</h1>
-    <div class="user_answers">
+    <div id="user_answers">
     <table class="table table-striped">
 
       <form action="{% url 'dating:questions' %}" method="POST">
@@ -152,7 +152,7 @@
     </form>
     <a href="{% url 'dating:find_matches' %}">Test</a>
   </table>
-  </div>
+</div><!-- user ansers -->
   </div><!-- #container-fluid -->
 
   </body>
