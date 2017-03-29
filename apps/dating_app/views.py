@@ -117,8 +117,11 @@ def home(request):
 	print '[username]:',request.session['username']
 	print '[user_id]:',request.session['user_id']
 	print '-' * 50
-
-	return render(request, 'dating_app/home.html')
+	context = {
+		'match': Match.objects.all(),
+		'user': User.objects.all()
+	}
+	return render(request, 'dating_app/home.html', context)
 
 def logout(request):
 	request.session.clear()
@@ -127,7 +130,7 @@ def logout(request):
 def show_user(request,user_id):
 	this_user = User.objects.get(id=user_id)
 	my_answers = Answer.objects.get(user_id=this_user.id)
-	
+
 	context = {
 		'user': this_user,
 		'answers': my_answers
@@ -144,7 +147,6 @@ def edit_user(request,user_id):
 	else:
 		this_user = User.objects.get(id=request.session['user_id'])
 		my_answers = Answer.objects.get(user_id=this_user.id)
-		
 		context = {
 			'user': this_user,
 			'answers': my_answers
