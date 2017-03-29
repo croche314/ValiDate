@@ -1,0 +1,16 @@
+{% include 'dating_app/header.html' %}
+
+<div id="container-fluid">
+	<h1 class="page_heading">My Messages</h1>
+	{% for message in all_my_messages %}
+		<div class="one_message">
+			<label class="label label-success">From:</label>
+			<span class="message_username">{{message.sender.username}}</span>
+			<br><br>
+			<label class="label label-success">To:</label>
+			<span class="message_username">{{message.receiver.username}}</span>
+			<br><br>
+			<p><i>{{message.text}}</i></p>
+		</div> <!-- .one_message -->
+	{% endfor %}
+</div> <!-- #container-fluid -->

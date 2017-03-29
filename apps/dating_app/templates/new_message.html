@@ -1,0 +1,18 @@
+{% include 'dating_app/header.html' %}
+
+<div id="container-fluid">
+	
+	<h1 class="page_heading">New Message</h1>
+
+	<div id="message_form">
+		<h2><label class="label label-success">From:</label> {{request.session.username}}</h2>
+		<h2><label class="label label-success">To:</label> {{receiver.username}}</h2>
+		
+			<form action="{% url 'dating:create_message' receiver_id=receiver.id %}" method="post">
+				{% csrf_token %}
+				<textarea name="html_message_text"></textarea>
+				<br>
+				<input class="btn btn-danger center-block" type="submit" value="Send Message">
+			</form>
+	</div>
+</div> <!-- #container-fluid -->

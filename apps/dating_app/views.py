@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.core.urlresolvers import reverse
+from itertools import chain
 from .models import *
 import bcrypt, re
 
@@ -135,10 +136,16 @@ def logout(request):
 def show_user(request,user_id):
 	this_user = User.objects.get(id=user_id)
 	my_answers = Answer.objects.get(user_id=this_user.id)
+	try: # find user's profile pic
+		my_pic = Image.objects.get(user_id=user_id)
+		user_pic = str(my_pic.user_pic)
+	except: # If no profile pic is found for this user, default image is shown
+		user_pic = 'img/user.png'
 
 	context = {
 		'user': this_user,
-		'answers': my_answers
+		'answers': my_answers,
+		'user_pic': user_pic
 	}
 
 	return render(request, 'dating_app/show_user.html', context)
@@ -230,14 +237,47 @@ def find_matches(request):
 				print str(percent_match) +"-------------"
  	return redirect('dating:home')
 
-def simple_upload(request):
-	if request.method == 'POST' and request.FILES['myfile']:
-	    myfile = request.FILES['myfile']
-	    fs = FileSystemStorage()
-	    filename = fs.save(myfile.name, myfile)
-	    uploaded_file_url = fs.url(filename)
-	    print 'url:', uploaded_file_url
-	    return render(request, 'dating_app/home.html', {
-	        'uploaded_file_url': uploaded_file_url
-	    })
-	return render(request, 'dating_app/home.html')
+def upload_pic(request):
+	user_id = request.session['user_id']
+	image = request.FILES['user_pic']
+	try:
+		Image.objects.create(user_id=request.session['user_id'], user_pic=image)
+	except:
+		Image.objects.filter(user_id=request.session['user_id']).update(user_pic=image)
+
+	messages.success(request, 'Photo uploaded!')
+	return redirect(reverse('dating:show_user',kwargs={'user_id':request.session['user_id']}))
+
+def new_message(request,receiver_id):
+	receiver = User.objects.get(id=receiver_id)
+	context = {
+		'receiver': receiver
+	}
+	return render(request, 'new_message.html', context)
+	
+def create_message(request,receiver_id):
+	sender = User.objects.get(id=request.session['user_id'])
+	receiver = User.objects.get(id=receiver_id)
+	message_text = request.POST['html_message_text']
+
+	new_message = Message.objects.create(sender=sender, receiver=receiver, text=message_text)
+
+	return redirect(reverse('dating:show_my_messages', kwargs={'user_id':sender.id}))
+
+def show_my_messages(request,user_id):
+	this_user = User.objects.get(id=user_id)
+	sent_messages = Message.objects.filter(sender_id=user_id)
+	received_messages = Message.objects.filter(receiver_id=user_id)
+	all_messages = list(chain(sent_messages,received_messages))
+	for message in all_messages:
+		print '-' * 50
+		print 'sender:',message.sender.username
+		print 'receiver:',message.receiver.name
+		print 'message:',message.text
+		print '-' * 50
+
+	context = {
+		'all_my_messages': all_messages
+	}
+	return render(request, 'dating_app/my_messages.html', context)
+

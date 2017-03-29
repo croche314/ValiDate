@@ -3,8 +3,8 @@
 
   <script>
   $( function() {
-    $( "#progressbar" ).progressbar({
-      value: 67
+    $( ".progressbar" ).progressbar({
+      value: 100
     });
   } );
   </script>
@@ -13,7 +13,7 @@
 	<div class="row">
 		<!-- Left Sidebar -->
 		<div id="show_user_sidebar" class="col-sm-2 center-block">
-			<img class="img-responsive" src="{% static 'dating_app/17.jpg' %}" alt="{{ request.session.username }} profile pic">
+			<img class="img-responsive" src="{% static 'dating_app/' %}{{user_pic}}"  alt="{{ request.session.username }} profile pic">
 			<br>
 
 			<!-- If this is the current user's profile, show edit buttons -->
@@ -29,7 +29,7 @@
 			{% else %}
 				<a class="btn btn-success center-block" href="poke.html">Poke Me</a>
 				<br>
-				<a class="btn btn-primary center-block" href="message.html">Message Me</a>
+				<a class="btn btn-primary center-block" href="{% url 'dating:new_message' receiver_id=user.id %}">Message Me</a>
 
 			{% endif %}
 
@@ -37,9 +37,10 @@
 
 		<!-- Main Content (Center) -->
 		<div class="col-sm-8">
+			<img >
 			<h1 class="page_heading">{{user.username}}</h1>
-			<span class="center center-block">67% complete</span>
-			<div id="progressbar" class="center-block"></div>
+			<span class="center center-block">100% complete</span>
+			<div class="progressbar" class="center-block"></div>
 			<br>
 			<!-- User's 'about_you' field might be blank, but if it's not, display its contents -->
 			<p id="user_intro" class="center-block">
@@ -103,7 +104,7 @@
 			<h4 class="center">Your Best Matches</h4>
 			<div class="row">
 				<div class="col-sm-12 user_match">
-					<a href="show_user/2">
+					<a href="{% url 'dating:show_user' user_id=4 %}">
 						<img class="headshot center-block" src="{% static 'dating_app/denzel-washington.jpg' %}" alt="Denzel Washington"><br>
 						<h4 class="center">TheDenzelnator187</h4>
 					</a>
@@ -118,7 +119,9 @@
 					</a>
 				</div> <!-- .col -->
 			</div><!-- .row -->
+
 		{% else %}
+		<!-- If not user's profile, show an advertisement -->
 		<div class="row">
 			<div class="col-sm-12 user_match">
 				<h5 class="center">Advertisement</h5>
@@ -146,14 +149,18 @@
 	</div> <!-- .row -->
 	{% endif %}
 
+	{% if user.id == request.session.user_id %}
 	<!-- File upload -->
-	<form method="post" enctype="multipart/form-data">
-	<h4 class="center">Upload Image</h4>
-    {% csrf_token %}
-	    <input type="file" name="myfile">
-	    <input class="btn btn-danger" type="submit" value="Upload">
-  	</form>
-
+	<div id="file_upload">
+		<form action="{% url 'dating:upload_pic' %}"method="post" enctype="multipart/form-data">
+		<h4 class="center">Upload Image</h4>
+	    {% csrf_token %}
+		    <input type="file" name="user_pic">
+		    <input class="btn btn-danger" type="submit" value="Upload">
+	  	</form>
+	</div>
+	  	{% endif %}
+	  	<br><br>
 </div> <!-- #container-fluid -->
 <script>
 	$(document).ready(function () {
