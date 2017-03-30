@@ -133,12 +133,10 @@ def home(request):
 		print 'user_pic:',p.user_pic
 		pic_dict[p.user_id] = p.user_pic
 	print pic_dict
-	print pic_dict[1]
 	context = {
 		'match': Match.objects.filter(user1_id = request.session['user_id']),
 		'match2': Match.objects.filter(user2_id=request.session['user_id']),
 		'all_users': User.objects.exclude(id=request.session['user_id']),
-		'likes': likes,
 		'all_pics': all_pics,
 		'pic_dict': pic_dict
 	}
@@ -159,16 +157,13 @@ def show_user(request,user_id):
 	try: # find user's profile pic
 		profile_pic_url = this_user.profile_pic_url
 	except: # If no profile pic is found for this user, default image is shown
-		user_pic = 'img/user.png'
+		profile_pic_url = 'img/user.png'
 	try:
 		like = Like.objects.get(like1_id=request.session['user_id'], like2_id=user_id)
 	except:
 		like = False
-	print "+++++++++++++++++++"
-	print like
-	print "+++++++++++++++++++"
 	my_likes = Like.objects.filter(like1_id=request.session['user_id'])
-	profile_pic_url = 'img/user.png'
+
 
 	# Gather all gallery pictures
 	my_gallery = Image.objects.filter(user_id=this_user.id)
@@ -429,7 +424,7 @@ def unlike_user(request, user_id):
 
 def preference(request):
 	try:
-		Preference.objects.filter(user_id=user_id).delete
+		Preference.objects.filter(user_id=request.session['user_id']).delete()
 	except:
 		pass
 	gender = request.POST['html_gender']

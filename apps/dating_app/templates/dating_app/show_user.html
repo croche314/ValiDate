@@ -24,7 +24,8 @@
 				Account status: <br>
 				<input type="checkbox" id="toggle_account">
 				<br><br>
-				<a class="btn btn-danger center-block" href="{% url 'dating:edit_user' user_id=request.session.user_id %}">Edit Profile</a>
+				<a class="btn btn-danger center-block" href="{% url 'dating:edit_user' user_id=request.session.user_id %}">Edit Profile</a><br>
+				<a class="btn btn-danger center-block" href="{% url 'dating:edit_preference' %}">Edit Preferences</a>
 
 			<!-- Or if this is not the current user's profile, show poke, message, etc. buttons -->
 			{% else %}
@@ -99,6 +100,7 @@
 				<!-- If this the logged-in user's profile, allow them to edit it -->
 				{% if user.id == request.session.user_id %}
 					<a class="btn btn-danger center-block" href="{% url 'dating:edit_user' user_id=request.session.user_id %}">Edit Profile</a>
+					<a class="btn btn-danger center-block" href="{% url 'dating:edit_preference' %}">Edit Preferences</a>
 				{% endif %}
 			</div> <!-- #user_answers -->
 		</div> <!-- .col -->
@@ -134,7 +136,7 @@
 	</div> <!-- .row -->
 
 	<!-- Second Row: More Pictures -->
-	
+
 	<div id="gallery" class="row">
 		<h4 class="center">More pictures of {{user.username}}</h4>
 		{% for image in my_gallery %}
