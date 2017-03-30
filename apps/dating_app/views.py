@@ -121,7 +121,7 @@ def home(request):
 	context = {
 		'match': Match.objects.filter(user1_id = request.session['user_id']),
 		'match2': Match.objects.filter(user2_id=request.session['user_id']),
-		'all_users': User.objects.exclude(my_match=request.session['user_id']),
+		'all_users': User.objects.exclude(my_match__user1=request.session['user_id']).exclude(matched_me__user2=request.session['user_id']),
 	}
 
 	# for u in context:
@@ -226,7 +226,11 @@ def questions(request):
 	gender = request.POST['html_gender']
 	feet = request.POST['html_feet']
 	inches = request.POST['html_inches']
-	height = float(feet) + float(inches)/12
+	try:
+		height = float(feet) + float(inches)/12
+	except:
+		messages.warning(request, 'Must include a height')
+		return redirect('dating:display_questions')
 	language = request.POST['html_language']
 	stack = request.POST['html_stack']
 	religion = request.POST['html_religion']
@@ -236,6 +240,9 @@ def questions(request):
 	ethnicity  = request.POST['html_ethnicity']
 	children = request.POST['html_wants_children']
 	about_you = request.POST['html_about_you']
+	if len(language)<1 or len(stack)<1 or len(religion)<1 or len(smoke)<1 or len(body)<1 or len(ethnicity)<1 or len(children)<1 or len(about_you)<1:
+		messages.warning(request, 'Make sure all fields are filled in')
+		return redirect('dating:display_questions')
 	Answer.objects.create(gender=gender, height=height, language=language, stack=stack, religion=religion, zip_code=zipcode, smoke=smoke, body_type=body, ethnicity=ethnicity, wants_children=children,user_id=request.session['user_id'], about_you=about_you, feet=feet, inches=inches)
 	return redirect('dating:find_matches')
 
@@ -299,7 +306,7 @@ def show_my_messages(request,user_id):
 	sent_messages = Message.objects.filter(sender_id=user_id).order_by('-created_at')
 	received_messages = Message.objects.filter(receiver_id=user_id).order_by('-created_at')
 	all_messages = list(chain(sent_messages,received_messages))
-	
+
 	context = {
 		'all_my_messages': all_messages
 	}
