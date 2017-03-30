@@ -20,7 +20,10 @@ urlpatterns = [
 	url(r'^like_user/(?P<user_id>\d+)$',like_user,name='like_user'),
 	url(r'^unlike_user/(?P<user_id>\d+)$',unlike_user,name='unlike_user'),
 	url(r'^preference$',preference, name='preference'),
-	url(r'^edit_preference$',edit_preference, name='edit_preference')
+	url(r'^edit_preference$',edit_preference, name='edit_preference'),
+	url(r'^delete_message/(?P<message_id>\d+)$',delete_message,name='delete_message'),
+	url(r'^delete_pic/(?P<image_id>\d+)$',delete_pic,name='delete_pic'),
+	url(r'^change_profile_pic/(?P<image_id>\d+)$',change_profile_pic,name='change_profile_pic'),
 
 
 

@@ -122,20 +122,25 @@ def home(request):
 	print '[username]:',request.session['username']
 	print '[user_id]:',request.session['user_id']
 	print '-' * 50
+	all_pics = Image.objects.filter(profile_pic=True)
+	pic_dict = {}
 
-	all_pics = Image.objects.all()
-	like = Like.objects.filter(like1=request.session['user_id'])
-	likes = {}
-	for l in like:
-		likes[l.like2_id] = True
-
-
+	print '-' * 50
+	print 'all_pics:', all_pics
+	print '-' * 50
+	for p in all_pics:
+		print 'user_id:',p.user_id
+		print 'user_pic:',p.user_pic
+		pic_dict[p.user_id] = p.user_pic
+	print pic_dict
+	print pic_dict[1]
 	context = {
 		'match': Match.objects.filter(user1_id = request.session['user_id']),
 		'match2': Match.objects.filter(user2_id=request.session['user_id']),
 		'all_users': User.objects.exclude(id=request.session['user_id']),
+		'likes': likes,
 		'all_pics': all_pics,
-		'likes': likes
+		'pic_dict': pic_dict
 	}
 
 	# for u in context:
@@ -150,9 +155,9 @@ def logout(request):
 def show_user(request,user_id):
 	this_user = User.objects.get(id=user_id)
 	my_answers = Answer.objects.get(user_id=this_user.id)
+	profile_pic = ""
 	try: # find user's profile pic
-		my_pic = Image.objects.get(user_id=user_id)
-		user_pic = str(my_pic.user_pic)
+		profile_pic_url = this_user.profile_pic_url
 	except: # If no profile pic is found for this user, default image is shown
 		user_pic = 'img/user.png'
 	try:
@@ -163,13 +168,17 @@ def show_user(request,user_id):
 	print like
 	print "+++++++++++++++++++"
 	my_likes = Like.objects.filter(like1_id=request.session['user_id'])
+	profile_pic_url = 'img/user.png'
 
+	# Gather all gallery pictures
+	my_gallery = Image.objects.filter(user_id=this_user.id)
 	context = {
 		'user': this_user,
 		'answers': my_answers,
-		'user_pic': user_pic,
 		'like': like,
-		'my_like': my_likes
+		'my_like': my_likes,
+		'profile_pic': profile_pic_url,
+		'my_gallery': my_gallery
 	}
 	return render(request, 'dating_app/show_user.html', context)
 
@@ -314,22 +323,66 @@ def find_matches(request):
  	return redirect('dating:home')
 
 def find_distance(user1zip,user2zip):
-	# url = 'https://www.zipcodeapi.com/rest/GoVJDjzV4jOwn0efU8t0LMQUNMYZUp8BN4kqnTmrdbYAbcP5li675W1SJ0REp0fd/distance.json/'+str(user1zip)+'/'+str(user2zip)+'/mile'
-	# data = json.load(urllib2.urlopen(url))
-	# return data['distance']
+	url = 'https://www.zipcodeapi.com/rest/GoVJDjzV4jOwn0efU8t0LMQUNMYZUp8BN4kqnTmrdbYAbcP5li675W1SJ0REp0fd/distance.json/'+str(user1zip)+'/'+str(user2zip)+'/mile'
+	#data = json.load(urllib2.urlopen(url))
+	#return data['distance']
 	return 4.0
 
 def upload_pic(request):
 	user_id = request.session['user_id']
-	image = request.FILES['user_pic']
-	try:
-		Image.objects.create(user_id=request.session['user_id'], user_pic=image)
-	except:
-		Image.objects.filter(user_id=request.session['user_id']).delete()
-		Image.objects.create(user_id=request.session['user_id'], user_pic=image)
+	this_user = User.objects.get(id=user_id)
 
-	messages.success(request, 'Photo uploaded!')
-	return redirect(reverse('dating:show_user',kwargs={'user_id':request.session['user_id']}))
+	if 'image' in request.FILES:
+		image = request.FILES['image']
+		try:
+			new_image = Image.objects.create(user_id=request.session['user_id'], user_pic=image,profile_pic=False)
+			this_user.profile_pic_url = new_image.user_pic
+			messages.success(request, 'Photo uploaded!')
+			return redirect(reverse('dating:show_user',kwargs={'user_id':request.session['user_id']}))
+		except:
+			messages.warning(request, 'Photo not uploaded, try again')
+			return redirect(reverse('dating:show_user',kwargs={'user_id':request.session['user_id']}))
+	else:
+		messages.warning(request, 'No image found, try again')
+		return redirect(reverse('dating:show_user',kwargs={'user_id':request.session['user_id']}))
+
+def delete_pic(request,image_id):
+	this_user = User.objects.get(id=request.session['user_id'])
+	this_pic = Image.objects.get(id=image_id)
+	if this_pic.user_pic == this_user.profile_pic_url:
+		this_user.profile_pic_url = 'img/user.png'
+	this_pic.delete()
+
+	new_pic = Image.objects.filter(user_id=this_user.id)
+
+	if len(new_pic) > 0:
+		new_pic[0].profile_pic = True
+		new_pic[0].save()
+	messages.success(request, 'Image deleted!')
+	return redirect(reverse('dating:show_user',kwargs={'user_id':this_user.id}))
+
+
+def change_profile_pic(request,image_id):
+	this_user = User.objects.get(id=request.session['user_id'])
+	this_pic = Image.objects.get(id=image_id)
+	original_profile = Image.objects.filter(user_id=this_user.id).filter(profile_pic=True)
+	print '-' * 50
+	print 'original_profile:', original_profile
+	print 'this_pic', this_pic.user_pic
+	print '-' * 50
+	if len(original_profile) > 0:
+		original_profile = original_profile[0]
+		original_profile.profile_pic=False
+		original_profile.save()
+
+	this_user.profile_pic_url = this_pic.user_pic
+	print 'this_user.profiile_pic_url',this_user.profile_pic_url
+	this_user.save()
+	this_pic.profile_pic = True
+	this_pic.save()
+
+	return redirect(reverse('dating:show_user',kwargs={'user_id':this_user.id}))
+
 
 def new_message(request,receiver_id):
 	receiver = User.objects.get(id=receiver_id)
@@ -403,3 +456,9 @@ def preference(request):
 
 def edit_preference(request):
 	return render(request, 'dating_app/preference.html')
+
+def delete_message(request,message_id):
+	this_message = Message.objects.get(id=message_id)
+	this_message.delete()
+	messages.success(request, 'Message deleted!')
+	return redirect(reverse('dating:show_my_messages', kwargs={'user_id':request.session['user_id']}))

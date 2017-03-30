@@ -10,6 +10,7 @@ class User(models.Model):
 	password = models.CharField(max_length=200)
 	age = models.IntegerField()
 	account_active = models.BooleanField(default=True)
+	profile_pic_url = models.FileField(upload_to='img',default='img/user.png')
 	created_at = models.DateTimeField(auto_now_add=True)
 	updated_at = models.DateTimeField(auto_now=True)
 
@@ -70,8 +71,9 @@ class Message(models.Model):
 	updated_at = models.DateTimeField(auto_now=True)
 
 class Image(models.Model):
-	user = models.OneToOneField(User,related_name='my_pic')
+	user = models.ForeignKey(User,related_name='my_pic')
 	user_pic = models.FileField(upload_to='img',default='img/user.png')
+	profile_pic = models.BooleanField(default=False)
 	created_at = models.DateTimeField(auto_now_add=True)
 	updated_at = models.DateTimeField(auto_now=True)
 

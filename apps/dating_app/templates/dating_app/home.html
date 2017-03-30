@@ -11,7 +11,7 @@
 	{% for user in match %}
 		<div class="col-sm-3 user_info">
 			<a href="{% url 'dating:show_user' user_id=user.user2_id %}">
-				<img class="headshot" src="{% static 'dating_app/' %}{{user.user2.my_pic.user_pic}}" alt="Denzel Washington"><br>
+				<img class="headshot" src="{% static 'dating_app/' %}{{user.user2.profile_pic_url}}" alt="Denzel Washington"><br>
 				<h4>{{user.user2.username}}</h4>
 			</a>
 			<br>
@@ -27,7 +27,7 @@
 		{% for user in match2 %}
 		<div class="col-sm-3 user_info">
 			<a href="{% url 'dating:show_user' user_id=user.user1_id %}">
-				<img class="headshot" src="{% static 'dating_app/' %}{{user.user1.my_pic.user_pic}}" alt="croche314"><br>
+				<img class="headshot" src="{% static 'dating_app/' %}{{user.user1.profile_pic_url}}" alt="{{user.user1.username}}"><br>
 				<h4>{{user.user1.username}}</h4>
 			</a>
 			<br>
@@ -47,7 +47,7 @@
 			{% if my_match_id != user.id and matched_me_id != user.id %}
 			<div class="col-sm-3 user_info">
 				<a href="{% url 'dating:show_user' user_id=user.id %}">
-					<img class="headshot" src="{% static 'dating_app/' %}{{user.my_pic.user_pic}}" alt="user.username"><br>
+					<img class="headshot" src="{% static 'dating_app/' %}{{user.profile_pic_url}}" alt="{{user.username}}"><br>
 					<h4>{{user.username}}</h4>
 				</a>
 				<br>
