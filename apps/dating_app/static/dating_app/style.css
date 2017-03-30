@@ -108,7 +108,7 @@ a {
 
 .user_info {
 	padding: 40px;
-	height: 500px;
+	height: 450px;
 }
 
 .headshot {
@@ -134,9 +134,11 @@ a {
 }
 
 #user_answers {
-	width: 50%;
+	width: 75%;
 	margin: 25px auto;
+	padding: 50px;
 	font-size: 20px;
+	background-color: #333;
 }
 
 #user_answers table {
@@ -196,7 +198,7 @@ a {
 }
 
 .one_message label, .message_username {
-	
+
 }
 .one_message p {
  	font-size: 30px;

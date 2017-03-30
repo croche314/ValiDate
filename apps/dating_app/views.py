@@ -4,6 +4,8 @@ from django.core.urlresolvers import reverse
 from itertools import chain
 from .models import *
 import bcrypt, re
+import json
+import urllib2
 
 from django.conf import settings
 from django.core.files.storage import FileSystemStorage
@@ -53,6 +55,7 @@ def create_user(request):
 			print 'hashed pword successfully:', hashed_pw
 			print '-' * 50
 			new_user = User.objects.create(name=server_name,username=server_username,email=server_email,age=server_age,password=hashed_pw)
+			default_pic = Image.objects.create(user=new_user,user_pic='img/user.png')
 			print '-' * 50
 			print 'created user successfully'
 			print '-' * 50
@@ -118,10 +121,14 @@ def home(request):
 	print '[username]:',request.session['username']
 	print '[user_id]:',request.session['user_id']
 	print '-' * 50
+
+	all_pics = Image.objects.all()
+
 	context = {
 		'match': Match.objects.filter(user1_id = request.session['user_id']),
 		'match2': Match.objects.filter(user2_id=request.session['user_id']),
 		'all_users': User.objects.exclude(my_match=request.session['user_id']),
+		'all_pics': all_pics
 	}
 
 	# for u in context:
@@ -147,6 +154,9 @@ def show_user(request,user_id):
 		'answers': my_answers,
 		'user_pic': user_pic
 	}
+	print '-' * 50
+	print 'find_distance result:',find_distance(60201,90210)
+	print '-' * 50
 
 	return render(request, 'dating_app/show_user.html', context)
 
@@ -183,19 +193,22 @@ def update_user(request, answer_id):
 	about_you = request.POST['html_about_you']
 
 	# If any fields are blank, send back to edit_user
-	if len(gender)<1 or len(height)<1 or len(language)<1 or len(stack)<1 or len(religion)<1 or len(smoke)<1 or len(body)<1 or len(ethnicity)<1 or len(children)<1 or len(about_you)<1:
+	if len(gender)<1 or len(str(height))<1 or len(language)<1 or len(stack)<1 or len(religion)<1 or len(smoke)<1 or len(body)<1 or len(ethnicity)<1 or len(children)<1 or len(about_you)<1:
 		messages.warning(request, 'Make sure all fields are filled in')
 		return redirect('dating:edit_user')
 	else: # If valid, update answers
-		Answer.objects.filter(id=answer_id).update(gender=gender,height=height,language=language,stack=stack,religion=religion,smoke=smoke,body_type=body,ethnicity=ethnicity,wants_children=children,about_you=about_you)
-		User.objects.filter(id=request.session['user_id']).update(name=name,username=username,age=age, feet=feet, inches=inches)
+		Answer.objects.filter(id=answer_id).update(gender=gender,height=height, feet=feet, inches=inches,language=language,stack=stack,religion=religion,smoke=smoke,body_type=body,ethnicity=ethnicity,wants_children=children,about_you=about_you)
+		User.objects.filter(id=request.session['user_id']).update(name=name,username=username,age=age)
 		messages.success(request, 'Answers updated!')
 		Match.objects.filter(user1_id=request.session['user_id']).delete()
 		Match.objects.filter(user2_id=request.session['user_id']).delete()
 		user = Answer.objects.get(id=request.session['user_id'])
 		answer_exclude = Answer.objects.exclude(id=request.session['user_id'])
+		user1zip = user.zip_code
 		for ans in answer_exclude:
 			counter = 0
+			user2zip = ans.zip_code
+			distance = find_distance(user1zip,user2zip)
 			if ans.gender != user.gender:
 				if ans.height > (user.height-10) and ans.height < (user.height-10):
 					counter += 1
@@ -242,13 +255,18 @@ def questions(request):
 def find_matches(request):
 	user = Answer.objects.get(id=request.session['user_id'])
 	answer_exclude = Answer.objects.exclude(id=request.session['user_id'])
+	user1zip = user.zip_code
 	for ans in answer_exclude:
 		counter = 0
+		user2zip = ans.zip_code
+		distance = find_distance(user1zip,user2zip)
 		if ans.gender != user.gender:
 			if ans.height > (user.height-10) and ans.height < (user.height-10):
 				counter += 1
-			if ans.zip_code == user.zip_code:
-				counter += 1
+			if distance <= 5:
+				counter += 3
+			if distance > 5:
+				counter = counter - 6
 			if ans.stack == user.stack:
 				counter += 2
 			if ans.religion == user.religion:
@@ -267,13 +285,19 @@ def find_matches(request):
 				print str(percent_match) +"-------------"
  	return redirect('dating:home')
 
+def find_distance(user1zip,user2zip):
+	url = 'https://www.zipcodeapi.com/rest/GoVJDjzV4jOwn0efU8t0LMQUNMYZUp8BN4kqnTmrdbYAbcP5li675W1SJ0REp0fd/distance.json/'+str(user1zip)+'/'+str(user2zip)+'/mile'
+	data = json.load(urllib2.urlopen(url))
+	return data['distance']
+
 def upload_pic(request):
 	user_id = request.session['user_id']
 	image = request.FILES['user_pic']
 	try:
 		Image.objects.create(user_id=request.session['user_id'], user_pic=image)
 	except:
-		Image.objects.filter(user_id=request.session['user_id']).update(user_pic=image)
+		Image.objects.filter(user_id=request.session['user_id']).delete()
+		Image.objects.create(user_id=request.session['user_id'], user_pic=image)
 
 	messages.success(request, 'Photo uploaded!')
 	return redirect(reverse('dating:show_user',kwargs={'user_id':request.session['user_id']}))
@@ -304,3 +328,6 @@ def show_my_messages(request,user_id):
 		'all_my_messages': all_messages
 	}
 	return render(request, 'dating_app/my_messages.html', context)
+
+def like_user(request,user_id):
+	pass

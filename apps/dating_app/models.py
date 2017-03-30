@@ -52,7 +52,7 @@ class Message(models.Model):
 	updated_at = models.DateTimeField(auto_now=True)
 
 class Image(models.Model):
-	user = models.ForeignKey(User,related_name='user_pics')
-	user_pic = models.FileField(upload_to='img',default='img/default.png')
+	user = models.OneToOneField(User,related_name='my_pic')
+	user_pic = models.FileField(upload_to='img',default='img/user.png')
 	created_at = models.DateTimeField(auto_now_add=True)
 	updated_at = models.DateTimeField(auto_now=True)
