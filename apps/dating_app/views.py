@@ -127,12 +127,8 @@ def home(request):
 	context = {
 		'match': Match.objects.filter(user1_id = request.session['user_id']),
 		'match2': Match.objects.filter(user2_id=request.session['user_id']),
-<<<<<<< HEAD
-		'all_users': User.objects.exclude(my_match__user1=request.session['user_id']).exclude(matched_me__user2=request.session['user_id']),
-=======
 		'all_users': User.objects.exclude(my_match=request.session['user_id']),
 		'all_pics': all_pics
->>>>>>> 269ff50431af988da0fb640954f354734143ff67
 	}
 
 	# for u in context:
