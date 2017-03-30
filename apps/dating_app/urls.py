@@ -16,5 +16,7 @@ urlpatterns = [
 	url(r'^upload_pic$',upload_pic,name='upload_pic'),
 	url(r'^new_message/(?P<receiver_id>\d+)$',new_message, name='new_message'),
 	url(r'^create_message/(?P<receiver_id>\d+)$',create_message,name='create_message'),
-	url(r'^show_my_messages/(?P<user_id>\d+)$',show_my_messages,name='show_my_messages')
+	url(r'^show_my_messages/(?P<user_id>\d+)$',show_my_messages,name='show_my_messages'),
+	url(r'^like_user/(?P<user_id>\d+)$',like_user,name='like_user')
+
 ]

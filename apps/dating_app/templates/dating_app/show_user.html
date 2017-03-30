@@ -18,7 +18,7 @@
 
 			<!-- If this is the current user's profile, show edit buttons -->
 			{% if user.id == request.session.user_id %}
-				<a class="btn btn-success center center-block" href="edit_image.html">Change Image</a>
+				<a class="btn btn-success center center-block" href="#file_upload">Change Image</a>
 				<br>
 				Account status: <br>
 				<input type="checkbox" id="toggle_account">
@@ -27,7 +27,7 @@
 
 			<!-- Or if this is not the current user's profile, show poke, message, etc. buttons -->
 			{% else %}
-				<a class="btn btn-success center-block" href="poke.html">Poke Me</a>
+				<a class="btn btn-success center-block" href="like.html">Like Me</a>
 				<br>
 				<a class="btn btn-primary center-block" href="{% url 'dating:new_message' receiver_id=user.id %}">Message Me</a>
 
@@ -112,15 +112,6 @@
 				</div> <!-- .col -->
 			</div><!-- .row -->
 
-			<div class="row">
-				<div class="col-sm-12 user_match">
-					<a href="show_user/1">
-						<img class="headshot center-block" src="{% static 'dating_app/17.jpg' %}" alt="croche314"><br>
-						<h4 class="center">croche314</h4>
-					</a>
-				</div> <!-- .col -->
-			</div><!-- .row -->
-
 		{% else %}
 		<!-- If not user's profile, show an advertisement -->
 		<div class="row">
@@ -150,8 +141,8 @@
 	</div> <!-- .row -->
 	{% endif %}
 
-	{% if user.id == request.session.user_id %}
 	<!-- File upload -->
+	{% if user.id == request.session.user_id %}
 	<div id="file_upload">
 		<form action="{% url 'dating:upload_pic' %}"method="post" enctype="multipart/form-data">
 		<h4 class="center">Upload Image</h4>
