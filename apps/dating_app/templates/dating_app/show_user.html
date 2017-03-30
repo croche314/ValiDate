@@ -13,7 +13,8 @@
 	<div class="row">
 		<!-- Left Sidebar -->
 		<div id="show_user_sidebar" class="col-sm-2 center-block">
-			<img class="img-responsive" src="{% static 'dating_app/' %}{{user_pic}}"  alt="{{ request.session.username }} profile pic">
+			<!-- Profile Picture -->
+			<img class="img-responsive profile_pic" src="{% static 'dating_app/' %}{{profile_pic}}"  alt="{{ request.session.username }} profile pic">
 			<br>
 
 			<!-- If this is the current user's profile, show edit buttons -->
@@ -37,11 +38,10 @@
 
 		<!-- Main Content (Center) -->
 		<div class="col-sm-8">
-			<img >
 			<h1 class="page_heading">{{user.username}}</h1>
 			<br>
 			<span class="center center-block">100% complete</span>
-			<div class="progressbar center-block"></div>
+			<div class="progressbar center-block hidden-sm"></div>
 			<br>
 			<!-- User's 'about_you' field might be blank, but if it's not, display its contents -->
 			<p id="user_intro" class="center-block">
@@ -127,27 +127,34 @@
 	</div> <!-- .row -->
 
 	<!-- Second Row: More Pictures -->
-	{% if user.id != request.session.user_id %}
-	<div class="row">
+	
+	<div id="gallery" class="row">
 		<h4 class="center">More pictures of {{user.username}}</h4>
-		{% for i in 'xxxxxxxxxx' %}
-		<div class="col-sm-2">
-			<a href="{% static 'dating_app/17.jpg' %}">
-				<img class="show_user_pic center-block" src="{% static 'dating_app/17.jpg' %}" alt="croche314">
+		{% for image in my_gallery %}
+		<div class="col-sm-2 one_gallery_pic">
+			<a href="{% static 'dating_app/' %}{{image.user_pic}}">
+				<img class="show_user_pic center-block" src="{% static 'dating_app/' %}{{image.user_pic}}" alt="{{user.username}}">
 				<br>
 			</a>
+			{% if user.id == request.session.user_id %}
+				<a class="btn btn-danger center-block img_btn" href="{% url 'dating:delete_pic' image_id=image.id %}">Delete</a>
+				<a class="btn btn-success center-block img_btn" href="{% url 'dating:change_profile_pic' image_id=image.id %}">Make this my profile pic</a>
+			{% endif %}
 		</div> <!-- .col -->
 		{% endfor %}
 	</div> <!-- .row -->
-	{% endif %}
+
+	<br>
 
 	<!-- File upload -->
 	{% if user.id == request.session.user_id %}
 	<div id="file_upload">
+
+		<!-- Upload image -->
 		<form action="{% url 'dating:upload_pic' %}"method="post" enctype="multipart/form-data">
-		<h4 class="center">Upload Image</h4>
+		<h4 class="center">Upload New Image</h4>
 	    {% csrf_token %}
-		    <input type="file" name="user_pic">
+		    <input type="file" name="image">
 		    <input class="btn btn-danger" type="submit" value="Upload">
 	  	</form>
 	</div>

@@ -98,7 +98,7 @@ a {
 }
 
 .progressbar {
-	width: 80%;
+	width: 60%;
 }
 
 #user_intro {
@@ -130,7 +130,17 @@ a {
 	padding: 5px 5px;
 }
 
-#show_user_right_sidebar .headshot {
+.profile_pic {
+	width: 200px;
+}
+
+.one_gallery_pic {
+	min-height: 350px;
+	
+}
+
+.img_btn {
+	
 }
 
 #user_answers {
@@ -240,4 +250,5 @@ a {
     .headshot {
     	width: 400px;
     }
+
 }
