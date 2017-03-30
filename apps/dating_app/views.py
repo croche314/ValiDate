@@ -1,7 +1,8 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
-from django.core.urlresolvers import reverse
+from django.core.urlresolvers import reverse, resolve
 from itertools import chain
+from urlparse import urlparse
 from .models import *
 import bcrypt, re
 import json
@@ -123,12 +124,18 @@ def home(request):
 	print '-' * 50
 
 	all_pics = Image.objects.all()
+	like = Like.objects.filter(like1=request.session['user_id'])
+	likes = {}
+	for l in like:
+		likes[l.like2_id] = True
+
 
 	context = {
 		'match': Match.objects.filter(user1_id = request.session['user_id']),
 		'match2': Match.objects.filter(user2_id=request.session['user_id']),
-		'all_users': User.objects.exclude(my_match=request.session['user_id']),
-		'all_pics': all_pics
+		'all_users': User.objects.exclude(id=request.session['user_id']),
+		'all_pics': all_pics,
+		'likes': likes
 	}
 
 	# for u in context:
@@ -148,16 +155,22 @@ def show_user(request,user_id):
 		user_pic = str(my_pic.user_pic)
 	except: # If no profile pic is found for this user, default image is shown
 		user_pic = 'img/user.png'
+	try:
+		like = Like.objects.get(like1_id=request.session['user_id'], like2_id=user_id)
+	except:
+		like = False
+	print "+++++++++++++++++++"
+	print like
+	print "+++++++++++++++++++"
+	my_likes = Like.objects.filter(like1_id=request.session['user_id'])
 
 	context = {
 		'user': this_user,
 		'answers': my_answers,
-		'user_pic': user_pic
+		'user_pic': user_pic,
+		'like': like,
+		'my_like': my_likes
 	}
-	print '-' * 50
-	print 'find_distance result:',find_distance(60201,90210)
-	print '-' * 50
-
 	return render(request, 'dating_app/show_user.html', context)
 
 def edit_user(request,user_id):
@@ -211,9 +224,13 @@ def update_user(request, answer_id):
 			distance = find_distance(user1zip,user2zip)
 			if ans.gender != user.gender:
 				if ans.height > (user.height-10) and ans.height < (user.height-10):
-					counter += 1
+					counter += 2
 				if ans.zip_code == user.zip_code:
-					counter += 1
+					counter += 3
+				if distance <= 5:
+					counter += 4
+				if distance > 5:
+					counter = counter - 1
 				if ans.stack == user.stack:
 					counter += 2
 				if ans.religion == user.religion:
@@ -223,7 +240,7 @@ def update_user(request, answer_id):
 				if ans.body_type == user.body_type:
 						counter += 3
 				if ans.wants_children == user.wants_children:
-					counter += 1
+					counter += 2
 				if counter > 5:
 					percent_match= (float(counter)/12)*100
 					int(percent_match)
@@ -257,9 +274,13 @@ def questions(request):
 		messages.warning(request, 'Make sure all fields are filled in')
 		return redirect('dating:display_questions')
 	Answer.objects.create(gender=gender, height=height, language=language, stack=stack, religion=religion, zip_code=zipcode, smoke=smoke, body_type=body, ethnicity=ethnicity, wants_children=children,user_id=request.session['user_id'], about_you=about_you, feet=feet, inches=inches)
-	return redirect('dating:find_matches')
+	return redirect('dating:edit_preference')
 
 def find_matches(request):
+	preference = Preference.objects.get(user_id=request.session['user_id'])
+	print "+++++++++++++++++++"
+	print preference
+	print "+++++++++++++++++++"
 	user = Answer.objects.get(id=request.session['user_id'])
 	answer_exclude = Answer.objects.exclude(id=request.session['user_id'])
 	user1zip = user.zip_code
@@ -267,22 +288,22 @@ def find_matches(request):
 		counter = 0
 		user2zip = ans.zip_code
 		distance = find_distance(user1zip,user2zip)
-		if ans.gender != user.gender:
-			if ans.height > (user.height-10) and ans.height < (user.height-10):
-				counter += 1
-			if distance <= 5:
-				counter += 3
-			if distance > 5:
-				counter = counter - 6
-			if ans.stack == user.stack:
+		if ans.gender != preference.gender:
+			if ans.height > (preference.height-10) and ans.height < (preference.height-10):
 				counter += 2
-			if ans.religion == user.religion:
+			if distance <= 5:
+				counter += 4
+			if distance > 5:
+				counter = counter - 1
+			if ans.stack == preference.stack:
+				counter += 2
+			if ans.religion == preference.religion:
 				counter += 3
-			if ans.smoke == user.smoke:
-				counter += 1
-			if ans.body_type == user.body_type:
+			if ans.smoke == preference.smoke:
 				counter += 3
-			if ans.wants_children == user.wants_children:
+			if ans.body_type == preference.body_type:
+				counter += 3
+			if ans.wants_children == preference.wants_children:
 				counter += 1
 			if counter > 5:
 				percent_match= (float(counter)/12)*100
@@ -293,9 +314,10 @@ def find_matches(request):
  	return redirect('dating:home')
 
 def find_distance(user1zip,user2zip):
-	url = 'https://www.zipcodeapi.com/rest/GoVJDjzV4jOwn0efU8t0LMQUNMYZUp8BN4kqnTmrdbYAbcP5li675W1SJ0REp0fd/distance.json/'+str(user1zip)+'/'+str(user2zip)+'/mile'
-	data = json.load(urllib2.urlopen(url))
-	return data['distance']
+	# url = 'https://www.zipcodeapi.com/rest/GoVJDjzV4jOwn0efU8t0LMQUNMYZUp8BN4kqnTmrdbYAbcP5li675W1SJ0REp0fd/distance.json/'+str(user1zip)+'/'+str(user2zip)+'/mile'
+	# data = json.load(urllib2.urlopen(url))
+	# return data['distance']
+	return 4.0
 
 def upload_pic(request):
 	user_id = request.session['user_id']
@@ -336,5 +358,48 @@ def show_my_messages(request,user_id):
 	}
 	return render(request, 'dating_app/my_messages.html', context)
 
-def like_user(request,user_id):
-	pass
+def like_user(request, user_id):
+	current_url = request.META['HTTP_REFERER']
+	o = urlparse(current_url).path
+	like1 = request.session['user_id']
+	like2 = user_id
+	Like.objects.create(like1_id=like1, like2_id=like2)
+	return redirect(o)
+
+def unlike_user(request, user_id):
+	current_url= request.META['HTTP_REFERER']
+	o = urlparse(current_url).path
+	like1 = request.session['user_id']
+	like2 = user_id
+	Like.objects.filter(like1_id=like1, like2_id=like2).delete()
+	return redirect(o)
+
+def preference(request):
+	try:
+		Preference.objects.filter(user_id=user_id).delete
+	except:
+		pass
+	gender = request.POST['html_gender']
+	feet = request.POST['html_feet']
+	inches = request.POST['html_inches']
+	try:
+		height = float(feet) + float(inches)/12
+	except:
+		messages.warning(request, 'Must include a height')
+		return redirect('dating:display_questions')
+	language = request.POST['html_language']
+	stack = request.POST['html_stack']
+	religion = request.POST['html_religion']
+	zipcode = request.POST['html_zip_code']
+	smoke = request.POST['html_smoke']
+	body = request.POST['html_body_type']
+	ethnicity  = request.POST['html_ethnicity']
+	children = request.POST['html_wants_children']
+	if len(language)<1 or len(stack)<1 or len(religion)<1 or len(smoke)<1 or len(body)<1 or len(ethnicity)<1 or len(children)<1:
+		messages.warning(request, 'Make sure all fields are filled in')
+		return redirect('dating:display_questions')
+	Preference.objects.create(gender=gender, height=height, language=language, stack=stack, religion=religion, zip_code=zipcode, smoke=smoke, body_type=body, ethnicity=ethnicity, wants_children=children,user_id=request.session['user_id'], feet=feet, inches=inches)
+	return redirect('dating:find_matches')
+
+def edit_preference(request):
+	return render(request, 'dating_app/preference.html')

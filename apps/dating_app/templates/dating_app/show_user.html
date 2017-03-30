@@ -27,8 +27,13 @@
 
 			<!-- Or if this is not the current user's profile, show poke, message, etc. buttons -->
 			{% else %}
-				<a class="btn btn-success center-block" href="like.html">Like Me</a>
+			{% if not like %}
+				<a class="btn btn-success center-block" href="{% url 'dating:like_user' user_id=user.id %}">Like Me</a>
 				<br>
+			{% elif like %}
+			<a class="btn btn-warning center-block" href="{% url 'dating:unlike_user' user_id=user.id %}">Unlike Me</a>
+			<br>
+			{% endif %}
 				<a class="btn btn-primary center-block" href="{% url 'dating:new_message' receiver_id=user.id %}">Message Me</a>
 
 			{% endif %}
@@ -102,15 +107,17 @@
 		<div id="show_user_right_sidebar" class="col-sm-2">
 		<!-- If this is current user's profile, show matches on the right -->
 		{% if user.id == request.session.user_id %}
-			<h4 class="center">Your Best Matches</h4>
+			<h4 class="center">People You like</h4>
+			{% for l in my_like %}
 			<div class="row">
 				<div class="col-sm-12 user_match">
-					<a href="{% url 'dating:show_user' user_id=4 %}">
+					<a href="{% url 'dating:show_user' user_id=l.like2_id %}">
 						<img class="headshot center-block" src="{% static 'dating_app/denzel-washington.jpg' %}" alt="Denzel Washington"><br>
-						<h4 class="center">TheDenzelnator187</h4>
+						<h4 class="center">{{l.like2.username}}</h4>
 					</a>
 				</div> <!-- .col -->
 			</div><!-- .row -->
+			{% endfor %}
 
 		{% else %}
 		<!-- If not user's profile, show an advertisement -->

@@ -1,0 +1,159 @@
+{% include 'dating_app/header.html' %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/rangeslider.js/2.3.0/rangeslider.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/rangeslider.js/2.3.0/rangeslider.min.css.map">
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/rangeslider.js/2.3.0/rangeslider.min.js"></script>
+
+<style type="text/css">
+ #user_answers {
+   color: #333;
+ }
+</style>
+
+<div id="container-fluid">
+
+   <h1 class="page_heading">Who are you looking for?</h1>
+   <div id="user_answers">
+
+     <form action="{% url 'dating:preference' %}" method="POST">
+     {% csrf_token %}
+     <table>
+     <tr>
+       <td>
+         <label class='label label-info' for="html_gender">Gender</label>
+       </td>
+       <td>
+           <select name="html_gender">
+             <option value=""></option>
+             <option value="male">Male</option>
+             <option value="female">Female</option>
+           </select>
+         </td>
+       </tr>
+       <tr>
+         <td>
+           <label class="label label-info">Height:</label>
+         </td>
+         <td>
+           <input type="text" name="html_feet" placeholder="Feet">
+         </td>
+         <td>
+           <input type="text" name="html_inches" placeholder="Inches">
+       </td>
+       </tr>
+       <tr>
+         <td>
+           <label class='label label-info' for="html_language">What is their Romance Language?</label>
+         </td>
+         <td>
+           <select name="html_language">
+             <option value=""></option>
+             <option value="Python">Python</option>
+             <option value="Html">Html</option>
+             <option value="Javascript">Javascript</option>
+             <option value="Ruby">Ruby</option>
+             <option value="C++">C++</option>
+             <option value="PHP">PHP</option>
+             <option value="Java">Java</option>
+             <option value="R">R</option>
+             <option value="Swift">Swift</option>
+           </select>
+         </td>
+       </tr>
+       <tr>
+         <td>
+           <label class="label label-info" for="html_stack">Front End, Back End or Full Stack?</label>
+         </td>
+         <td>
+           <select name="html_stack">
+             <option value=""></option>
+             <option value="full">Full Stack</option>
+             <option value="front">Front End</option>
+             <option value="back">Back End</option>
+           </select>
+         </td>
+       </tr>
+       <tr>
+         <td>
+           <label class="label label-info" for="html_religion">What is their Religion?</label>
+         </td>
+         <td>
+           <select name="html_religion">
+             <option value=""></option>
+             <option value="Mac">Mac</option>
+             <option value="Windows">Windows</option>
+             <option value="Linux">Linux</option>
+           </select>
+         </td>
+       </tr>
+       <tr>
+         <td>
+           <label class="label label-info" for="html_zip_code">Zip-code:</label>
+         </td>
+         <td>
+           <input type="text" name="html_zip_code" value="">
+         </td>
+       </tr>
+       <tr>
+         <td>
+           <label class="label label-info" for="html_smoke">Do they smoke?</label>
+         </td>
+         <td>
+           <select name="html_smoke">
+             <option value=""></option>
+             <option value="True">True</option>
+             <option value="False">False</option>
+           </select>
+         </td>
+       </tr>
+       <tr>
+         <td>
+           <label class="label label-info" for="html_body_type">What is their Body-type?</label>
+         </td>
+         <td>
+           <select name="html_body_type">
+             <option value=""></option>
+             <option value="slender">Slender</option>
+             <option value="Big and Beautiful">Big and Beautiful</option>
+             <option value="curvy">Curvy</option>
+             <option value="about average">About Average</option>
+             <option value="full-figured">Full-figured</option>
+             <option value="heavyset">Heavyset</option>
+             <option value="a few extra pounds">A few extra pounds</option>
+             <option value="stocky">Stocky</option>
+           </select>
+         </td>
+       </tr>
+       <tr>
+         <td>
+           <label class="label label-info" for="html_ethnicity">Ethnicity</label>
+         </td>
+         <td>
+           <select name='html_ethnicity'>
+             <option value=""></option>
+             <option value="white">White</option>
+             <option value="african american">African American</option>
+             <option value="asian">Asian</option>
+             <option value="american indian">American Indian or Alaska Native</option>
+             <option value="hispanic">Hispanic or Lationo</option>
+           </select>
+         </td>
+       </tr>
+       <tr>
+         <td>
+           <label class="label label-info" for="html_wants_children">Do they want to have children?</label>
+         </td>
+         <td>
+           <select name="html_wants_children">
+             <option value=""></option>
+             <option value="True">True</option>
+             <option value="False">False</option>
+           </select>
+         </td>
+       </tr>
+     </table>
+     <input class="btn btn-danger center-block" type="submit" name="submit" value="Submit!">
+   </form>
+ </div>
+ </div><!-- #container-fluid -->
+ </body>
+</html>
