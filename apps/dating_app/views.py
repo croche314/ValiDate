@@ -124,26 +124,13 @@ def home(request):
 	print '-' * 50
 	all_pics = Image.objects.filter(profile_pic=True)
 	pic_dict = {}
-
-	print '-' * 50
-	print 'all_pics:', all_pics
-	print '-' * 50
-	for p in all_pics:
-		print 'user_id:',p.user_id
-		print 'user_pic:',p.user_pic
-		pic_dict[p.user_id] = p.user_pic
-	print pic_dict
 	context = {
 		'match': Match.objects.filter(user1_id = request.session['user_id']),
 		'match2': Match.objects.filter(user2_id=request.session['user_id']),
 		'all_users': User.objects.exclude(id=request.session['user_id']),
 		'all_pics': all_pics,
-		'pic_dict': pic_dict
 	}
 
-	# for u in context:
-	# 	for user in u:
-	# 		print u
 	return render(request, 'dating_app/home.html', context)
 
 def logout(request):
@@ -163,7 +150,6 @@ def show_user(request,user_id):
 	except:
 		like = False
 	my_likes = Like.objects.filter(like1_id=request.session['user_id'])
-
 
 	# Gather all gallery pictures
 	my_gallery = Image.objects.filter(user_id=this_user.id)
@@ -361,10 +347,7 @@ def change_profile_pic(request,image_id):
 	this_user = User.objects.get(id=request.session['user_id'])
 	this_pic = Image.objects.get(id=image_id)
 	original_profile = Image.objects.filter(user_id=this_user.id).filter(profile_pic=True)
-	print '-' * 50
-	print 'original_profile:', original_profile
-	print 'this_pic', this_pic.user_pic
-	print '-' * 50
+
 	if len(original_profile) > 0:
 		original_profile = original_profile[0]
 		original_profile.profile_pic=False

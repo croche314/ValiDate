@@ -114,7 +114,7 @@
 			<div class="row">
 				<div class="col-sm-12 user_match">
 					<a href="{% url 'dating:show_user' user_id=l.like2_id %}">
-						<img class="headshot center-block" src="{% static 'dating_app/denzel-washington.jpg' %}" alt="Denzel Washington"><br>
+						<img class="headshot center-block" src="{% static 'dating_app/'%}{{l.like2.profile_pic_url}}" alt="Denzel Washington"><br>
 						<h4 class="center">{{l.like2.username}}</h4>
 					</a>
 				</div> <!-- .col -->
