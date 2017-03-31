@@ -2,34 +2,51 @@
 
 <div id="container-fluid">
 	<h1 class="page_heading">My Messages</h1>
-	{% for message in all_my_messages %}
-		<div class="one_message">
-			<label class="label label-success">From:</label>
-			<a href="{% url 'dating:show_user' user_id=message.sender.id %}" class="message_username">
-				{{message.sender.username}}
-			</a>
-			<br><br>
-			<label class="label label-success">To:</label>
-			<a href="{% url 'dating:show_user' user_id=message.receiver.id %}" class="message_username">{{message.receiver.username}}</a>
-			<br><br>
-			<p>
-				<i class="label label-default">{{message.text}}</i>
-				{# <a class="btn btn-danger" href="{% url 'dating:new_message' receiver_id=message.sender.id %}">Reply</a> #}
+		<div class="row conversations">
 
-			{% if message.sender.id == request.session.user_id %}
-				<form action="{% url 'dating:create_message' receiver_id=message.receiver.id %}" method="post">
-			{% else %}
-				<form action="{% url 'dating:create_message' receiver_id=message.sender.id %}" method="post">
-			{% endif %}
-				{% csrf_token %}
-				<textarea name="html_message_text"></textarea>
-				<br>
-				<input class="btn btn-default" type="submit" value="Reply">
-				<a class="btn btn-default" href="{% url 'dating:delete_message' message_id=message.id %}">Delete</a>
-			</form>
-			</p>
-
+			<!-- Conversation -->
+			{% for conversation_id,message_object in all_messages.iteritems %}
 			
-		</div> <!-- .one_message -->
-	{% endfor %}
+				{% if message_object.0.sender.id == request.session.user_id %}
+					<a href="{% url 'dating:show_user' user_id=message_object.0.receiver.id %}" alt="">
+						<img class="message_img center center-block" src="/static/dating_app/{{message_object.0.receiver.profile_pic_url}}" alt="">
+						<br>
+						<h2 class="conversation_with center-block label label-success">{{message_object.0.receiver.username}}</h2>
+					</a>
+				{% else %}
+					<a href="{% url 'dating:show_user' user_id=message_object.0.sender.id %}" alt="">
+						<img class="message_img center center-block" src="/static/dating_app/{{message_object.0.sender.profile_pic_url}}" alt="">
+						<br>
+						<h2 class="conversation_with center-block label label-success">{{message_object.0.sender.username}}</h2>
+					</a>
+				{% endif %}
+				<br>
+			<!-- Messages within that Conversation -->
+				{% for message in message_object %}
+					{% if message.sender.id == request.session.user_id %}
+						<label class="label label-default">{{message.sender.username}}:</label> &nbsp;<i>{{message.text}}</i>
+					<br><br>
+					{% else %}
+						<label class="label label-success">{{message.sender.username}}:</label> &nbsp;<i>{{message.text}}</i>
+					<br><br>
+					{% endif %}
+					
+					
+					<form action="{% url 'dating:create_message' receiver_id=message.sender.id conversation_id=conversation_id %}" method="post">
+				
+				{% endfor %}
+					{% csrf_token %}
+					<textarea name="html_message_text"></textarea>
+					<br>
+					<input class="btn btn-default btn-danger" type="submit" value="Send">
+				</form>
+				<hr>
+				<br><br>
+
+			{% endfor %}
+		</div> <!-- .row .conversations -->
+
+				
+
+	
 </div> <!-- #container-fluid -->

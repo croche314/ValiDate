@@ -63,7 +63,14 @@ class Like(models.Model):
 	created_at = models.DateTimeField(auto_now_add=True)
 	updated_at = models.DateTimeField(auto_now=True)
 
+class Conversation(models.Model):
+	user1 = models.ForeignKey(User, related_name='my_conversation1')
+	user2 = models.ForeignKey(User,related_name='my_conversation2')
+	created_at = models.DateTimeField(auto_now_add=True)
+	updated_at = models.DateTimeField(auto_now=True)
+
 class Message(models.Model):
+	conversation = models.ForeignKey(Conversation,related_name='messages')
 	text = models.TextField(max_length=1000)
 	sender = models.ForeignKey(User, related_name='my_sent')
 	receiver = models.ForeignKey(User,related_name='my_received')

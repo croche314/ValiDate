@@ -3,6 +3,7 @@ from django.contrib import messages
 from django.core.urlresolvers import reverse, resolve
 from itertools import chain
 from urlparse import urlparse
+from django.db.models import Q
 from .models import *
 import bcrypt, re
 import json
@@ -363,18 +364,28 @@ def change_profile_pic(request,image_id):
 
 
 def new_message(request,receiver_id):
+	this_user = User.objects.get(id=request.session['user_id'])
 	receiver = User.objects.get(id=receiver_id)
-	context = {
-		'receiver': receiver
-	}
-	return render(request, 'new_message.html', context)
+	my_conversations_with_this_user = Conversation.objects.filter(user1=this_user.id).filter(user2=receiver_id) | Conversation.objects.filter(user2=this_user.id).filter(user1=receiver_id)
+	if len(my_conversations_with_this_user) == 0:
+		new_conversation = Conversation.objects.create(user1=this_user,user2=receiver)
+		conversation_id = new_conversation.id
+		context = {
+			'receiver': receiver,
+			'conversation_id': conversation_id
+		}
+		return render(request, 'new_message.html', context)
+	else:
+		return redirect(reverse('dating:show_my_messages', kwargs={'user_id':this_user.id}))
+		
 
-def create_message(request,receiver_id):
+
+def create_message(request,receiver_id,conversation_id):
 	sender = User.objects.get(id=request.session['user_id'])
 	receiver = User.objects.get(id=receiver_id)
 	message_text = request.POST['html_message_text']
 
-	new_message = Message.objects.create(sender=sender, receiver=receiver, text=message_text)
+	new_message = Message.objects.create(sender=sender, receiver=receiver, text=message_text,conversation_id=conversation_id)
 
 	return redirect(reverse('dating:show_my_messages', kwargs={'user_id':sender.id}))
 
@@ -382,10 +393,29 @@ def show_my_messages(request,user_id):
 	this_user = User.objects.get(id=user_id)
 	sent_messages = Message.objects.filter(sender_id=user_id).order_by('-created_at')
 	received_messages = Message.objects.filter(receiver_id=user_id).order_by('-created_at')
-	all_messages = list(chain(sent_messages,received_messages))
+	all_my_messages = list(chain(sent_messages,received_messages))
+	
+	user1_converations = Conversation.objects.filter(user1=this_user.id)
+	user2_conversations = Conversation.objects.filter(user2=this_user.id)
+	all_my_conversations = list(chain(user1_converations,user2_conversations))
 
+	print '-' * 50
+	print 'all of my conversations:',all_my_conversations
+	print '-' * 50 
+	all_messages = {}
+
+	for conversation in all_my_conversations:
+		messages_in_this_conversation = Message.objects.filter(conversation_id=conversation.id)
+		all_messages[conversation.id] = messages_in_this_conversation
+	print all_messages
+		# for message in messages_in_this_conversation:
+		# 	print conversation.id
+		# 	print message.sender.username
+		# 	print message.text
 	context = {
-		'all_my_messages': all_messages
+		'all_my_messages': all_my_messages,
+		'all_my_conversations': all_my_conversations,
+		'all_messages': all_messages
 	}
 	return render(request, 'dating_app/my_messages.html', context)
 

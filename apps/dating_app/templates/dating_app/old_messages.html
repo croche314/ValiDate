@@ -1,0 +1,30 @@
+{% for message in all_my_messages %}
+		<div class="one_message">
+			<label class="label label-success">From:</label>
+			<a href="{% url 'dating:show_user' user_id=message.sender.id %}" class="message_username">
+				{{message.sender.username}}
+			</a>
+			<br><br>
+			<label class="label label-success">To:</label>
+			<a href="{% url 'dating:show_user' user_id=message.receiver.id %}" class="message_username">{{message.receiver.username}}</a>
+			<br><br>
+			<p>
+				<i class="label label-default">{{message.text}}</i>
+				<a class="btn btn-danger" href="{% url 'dating:new_message' receiver_id=message.sender.id %}">Reply</a>
+
+			{% if message.sender.id == request.session.user_id %}
+				<form action="{% url 'dating:create_message' receiver_id=message.receiver.id %}" method="post">
+			{% else %}
+				<form action="{% url 'dating:create_message' receiver_id=message.sender.id %}" method="post">
+			{% endif %}
+				{% csrf_token %}
+				<textarea name="html_message_text"></textarea>
+				<br>
+				<input class="btn btn-default" type="submit" value="Reply">
+				<a class="btn btn-default" href="{% url 'dating:delete_message' message_id=message.id %}">Delete</a>
+			</form>
+			</p>
+
+			
+		</div> <!-- .one_message -->
+	{% endfor %}
