@@ -136,11 +136,11 @@ a {
 
 .one_gallery_pic {
 	min-height: 350px;
-	
+
 }
 
 .img_btn {
-	
+
 }
 
 #user_answers {
@@ -251,4 +251,7 @@ a {
     	width: 400px;
     }
 
+}
+input#searchbar {
+	color:black;
 }

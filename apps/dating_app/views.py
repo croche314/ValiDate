@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.core.urlresolvers import reverse, resolve
+from django.contrib.postgres.search import SearchQuery, SearchRank, SearchVector
 from itertools import chain
 from urlparse import urlparse
 from .models import *
@@ -267,6 +268,10 @@ def questions(request):
 	return redirect('dating:edit_preference')
 
 def find_matches(request):
+	try:
+		Match.objects.filter(user1_id=request.session['user_id']).delete()
+	except:
+		pass
 	preference = Preference.objects.get(user_id=request.session['user_id'])
 	print "+++++++++++++++++++"
 	print preference
@@ -274,11 +279,14 @@ def find_matches(request):
 	user = Answer.objects.get(id=request.session['user_id'])
 	answer_exclude = Answer.objects.exclude(id=request.session['user_id'])
 	user1zip = user.zip_code
+	print "+++++++++++++++++++++"
+	print preference.gender
+	print "+++++++++++++++++++++"
 	for ans in answer_exclude:
 		counter = 0
 		user2zip = ans.zip_code
 		distance = find_distance(user1zip,user2zip)
-		if ans.gender != preference.gender:
+		if ans.gender == preference.gender:
 			if ans.height > (preference.height-10) and ans.height < (preference.height-10):
 				counter += 2
 			if distance <= 5:
@@ -295,8 +303,8 @@ def find_matches(request):
 				counter += 3
 			if ans.wants_children == preference.wants_children:
 				counter += 1
-			if counter > 5:
-				percent_match= (float(counter)/12)*100
+			if counter > 8:
+				percent_match= (float(counter)/15)*100
 				int(percent_match)
 				Match.objects.create(user1_id = user.id, user2_id =ans.id, percent_match=percent_match)
 				print counter
@@ -440,3 +448,6 @@ def delete_message(request,message_id):
 	this_message.delete()
 	messages.success(request, 'Message deleted!')
 	return redirect(reverse('dating:show_my_messages', kwargs={'user_id':request.session['user_id']}))
+
+def search_query(request):
+	pass

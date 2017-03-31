@@ -24,7 +24,6 @@ urlpatterns = [
 	url(r'^delete_message/(?P<message_id>\d+)$',delete_message,name='delete_message'),
 	url(r'^delete_pic/(?P<image_id>\d+)$',delete_pic,name='delete_pic'),
 	url(r'^change_profile_pic/(?P<image_id>\d+)$',change_profile_pic,name='change_profile_pic'),
-
-
+	url(r'^search$', search_query, name='search'),
 
 ]
